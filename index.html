@@ -1,0 +1,1837 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>CollectPro — Compliance Portal</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --brand:#0C4A6E;--brand2:#0284C7;--brand-dark:#082f49;
+  --comp:#0F766E;--comp-l:#CCFBF1;--comp-b:#99F6E4;--comp-d:#0D5D57;
+  --teal:#00C49A;--teal-d:#00A882;
+  --orange:#F59E0B;--red:#EF4444;--green:#22C55E;--purple:#7C3AED;
+  --surf:#F0FDF9;--surf2:#E6FFFA;--brd:#99F6E4;--brd2:#5EEAD4;
+  --tx:#0C2340;--tx2:#375569;--tx3:#64748B;
+  --r:10px;--rs:6px;--sb-w:215px;
+  --shm:0 4px 20px rgba(0,0,0,.10);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'DM Sans',sans-serif;font-size:14px;color:var(--tx);background:var(--surf);height:100vh;overflow:hidden}
+.mono{font-family:'DM Mono',monospace}
+
+/* LOGIN */
+#s-login{display:flex;align-items:center;justify-content:center;height:100vh;background:linear-gradient(135deg,#E8F5F3 0%,#CCFBF1 50%,#99F6E4 100%)}
+.login-card{display:flex;width:820px;min-height:500px;border-radius:16px;overflow:hidden;box-shadow:0 20px 60px rgba(15,118,110,.18)}
+.login-left{width:360px;background:#fff;padding:44px 40px;display:flex;flex-direction:column;gap:20px}
+.login-logo{display:flex;align-items:center;gap:10px;margin-bottom:4px}
+.login-logo-ic{width:42px;height:42px;background:linear-gradient(135deg,var(--comp),var(--comp-d));border-radius:10px;display:flex;align-items:center;justify-content:center;color:#fff;font-size:18px}
+.login-logo-txt{font-size:18px;font-weight:700;color:var(--tx)}
+.login-logo-sub{font-size:11px;color:var(--tx3);font-weight:500}
+.login-title{font-size:22px;font-weight:700;color:var(--tx);margin-top:4px}
+.login-sub{font-size:13px;color:var(--tx2);line-height:1.5}
+.role-tabs{display:flex;gap:6px;background:#F1F5F9;border-radius:8px;padding:4px}
+.role-tab{flex:1;padding:7px 6px;border:none;border-radius:6px;font-size:12px;font-weight:600;cursor:pointer;background:transparent;color:var(--tx3);transition:.2s}
+.role-tab.on{background:#fff;color:var(--comp);box-shadow:0 1px 4px rgba(0,0,0,.1)}
+.login-inp{width:100%;padding:10px 14px;border:1.5px solid var(--brd);border-radius:var(--rs);font-size:14px;font-family:'DM Sans',sans-serif;outline:none;transition:.2s;color:var(--tx)}
+.login-inp:focus{border-color:var(--comp)}
+.login-btn{width:100%;padding:12px;background:linear-gradient(135deg,var(--comp),var(--comp-d));border:none;border-radius:var(--rs);color:#fff;font-size:15px;font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif;transition:.2s}
+.login-btn:hover{opacity:.9}
+.login-meta{display:flex;gap:16px;font-size:11px;color:var(--tx3)}
+.login-right{flex:1;background:linear-gradient(135deg,var(--comp-d) 0%,#0C4A6E 100%);padding:44px 36px;display:flex;flex-direction:column;justify-content:center;color:#fff}
+.login-right h2{font-size:26px;font-weight:700;margin-bottom:8px}
+.login-right h2 span{color:#5EEAD4}
+.login-right p{font-size:13px;opacity:.75;margin-bottom:32px;line-height:1.6}
+.bolt-list{display:flex;flex-direction:column;gap:14px}
+.bolt-item{display:flex;align-items:flex-start;gap:12px}
+.bolt-letter{width:32px;height:32px;background:rgba(255,255,255,.15);border-radius:8px;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:15px;color:#5EEAD4;flex-shrink:0}
+.bolt-desc{font-size:12px;opacity:.8;line-height:1.4}
+.bolt-desc strong{opacity:1;color:#fff}
+
+/* SHELL */
+#s-main{display:none;height:100vh;flex-direction:row}
+#s-main.active{display:flex}
+.shell{display:flex;flex-direction:row;height:100%;width:100%}
+
+/* SIDEBAR */
+.sb{width:var(--sb-w);background:var(--brand-dark);display:flex;flex-direction:column;height:100%;flex-shrink:0;overflow:hidden}
+.sb-top{padding:16px 14px 10px;border-bottom:1px solid rgba(255,255,255,.08)}
+.sb-logo{display:flex;align-items:center;gap:9px}
+.sb-logo-ic{width:34px;height:34px;background:linear-gradient(135deg,var(--comp),var(--comp-d));border-radius:8px;display:flex;align-items:center;justify-content:center;color:#fff;font-size:14px;flex-shrink:0}
+.sb-logo-txt{color:#fff;font-weight:700;font-size:14px;line-height:1.1}
+.sb-logo-sub{color:rgba(255,255,255,.45);font-size:10px}
+.sb-user{padding:12px 14px;border-bottom:1px solid rgba(255,255,255,.08)}
+.sb-av{width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:#fff;flex-shrink:0}
+.sb-uname{color:#fff;font-size:13px;font-weight:600}
+.sb-urole{font-size:10px;padding:2px 7px;border-radius:4px;font-weight:600}
+.sb-urole.mgr{background:rgba(15,118,110,.35);color:#5EEAD4}
+.sb-urole.exe{background:rgba(2,132,199,.25);color:#7DD3FC}
+.sb-nav{flex:1;overflow-y:auto;padding:8px 0}
+.sb-grp{padding:6px 14px 2px;font-size:10px;font-weight:700;color:rgba(255,255,255,.3);letter-spacing:.08em}
+.sb-item{display:flex;align-items:center;gap:10px;padding:9px 14px;cursor:pointer;color:rgba(255,255,255,.6);font-size:13px;font-weight:500;border-left:3px solid transparent;transition:.15s;position:relative}
+.sb-item:hover{background:rgba(255,255,255,.06);color:rgba(255,255,255,.85)}
+.sb-item.on{background:rgba(15,118,110,.25);color:#5EEAD4;border-left-color:var(--comp)}
+.sb-item .sb-badge{margin-left:auto;background:#EF4444;color:#fff;font-size:10px;font-weight:700;padding:1px 6px;border-radius:10px}
+.sb-logout{padding:12px 14px;border-top:1px solid rgba(255,255,255,.08)}
+.sb-logout-btn{display:flex;align-items:center;gap:8px;color:rgba(255,255,255,.45);font-size:12px;cursor:pointer;padding:6px 0}
+.sb-logout-btn:hover{color:rgba(255,255,255,.7)}
+
+/* PAGE CONTENT */
+.pc{flex:1;display:flex;flex-direction:column;height:100%;overflow:hidden}
+.screen{display:none;flex:1;flex-direction:column;height:100%;overflow:hidden}
+.screen.active{display:flex}
+
+/* TOPBAR */
+.tb{height:54px;background:#fff;border-bottom:1px solid var(--brd);display:flex;align-items:center;padding:0 20px;gap:12px;flex-shrink:0}
+.tb-title{font-size:16px;font-weight:700;color:var(--tx);flex:1}
+.tb-badge{font-size:10px;font-weight:700;padding:3px 8px;border-radius:4px;background:var(--comp-l);color:var(--comp)}
+.tb-btn{display:flex;align-items:center;gap:6px;padding:7px 14px;border-radius:var(--rs);font-size:13px;font-weight:600;cursor:pointer;border:none;font-family:'DM Sans',sans-serif;transition:.15s}
+.tb-btn.comp{background:var(--comp);color:#fff}
+.tb-btn.comp:hover{background:var(--comp-d)}
+.tb-btn.out{background:#fff;color:var(--comp);border:1.5px solid var(--comp)}
+.tb-btn.out:hover{background:var(--comp-l)}
+
+/* MAIN CONTENT AREA */
+.main{flex:1;overflow-y:auto;padding:20px}
+
+/* CARDS & TILES */
+.card{background:#fff;border:1px solid var(--brd);border-radius:var(--r);padding:18px}
+.tile{background:#fff;border:1px solid var(--brd);border-radius:var(--r);padding:16px 18px;cursor:pointer;transition:.15s;border-top:3px solid transparent}
+.tile:hover{box-shadow:var(--shm)}
+.tile-lbl{font-size:11px;font-weight:600;color:var(--tx3);text-transform:uppercase;letter-spacing:.06em;margin-bottom:6px}
+.tile-val{font-size:26px;font-weight:700;color:var(--tx);font-family:'DM Mono',monospace}
+.tile-sub{font-size:12px;color:var(--tx3);margin-top:4px}
+.tile-sub.g{color:var(--green)}
+.tile-sub.r{color:var(--red)}
+.tile-sub.o{color:var(--orange)}
+
+/* GRIDS */
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.row3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px}
+.row4{display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:14px}
+
+/* BUTTONS */
+.btn{display:inline-flex;align-items:center;gap:6px;padding:8px 16px;border-radius:var(--rs);font-size:13px;font-weight:600;cursor:pointer;border:none;font-family:'DM Sans',sans-serif;transition:.15s}
+.btn-sm{padding:5px 12px;font-size:12px}
+.btn-comp{background:var(--comp);color:#fff}
+.btn-comp:hover{background:var(--comp-d)}
+.btn-out{background:#fff;color:var(--comp);border:1.5px solid var(--comp)}
+.btn-out:hover{background:var(--comp-l)}
+.btn-red{background:var(--red);color:#fff}
+.btn-red:hover{opacity:.85}
+.btn-orange{background:var(--orange);color:#fff}
+.btn-green{background:var(--green);color:#fff}
+.btn-grey{background:#F1F5F9;color:var(--tx2);border:1.5px solid var(--brd)}
+.btn-grey:hover{background:#E2E8F0}
+
+/* INPUTS */
+.inp{width:100%;padding:8px 12px;border:1.5px solid var(--brd);border-radius:var(--rs);font-size:13px;font-family:'DM Sans',sans-serif;color:var(--tx);outline:none;transition:.2s;background:#fff}
+.inp:focus{border-color:var(--comp)}
+.fg{display:flex;flex-direction:column;gap:5px}
+.fg label{font-size:12px;font-weight:600;color:var(--tx2)}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.grid3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px}
+.grid4{display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:12px}
+
+/* STATUS PILLS */
+.spill{display:inline-flex;align-items:center;padding:3px 9px;border-radius:20px;font-size:11px;font-weight:700;white-space:nowrap}
+.s-ptp{background:#DBEAFE;color:#1D4ED8}
+.s-rna{background:#F1F5F9;color:#64748B}
+.s-legal{background:#FEE2E2;color:#DC2626}
+.s-tps{background:#FEF3C7;color:#D97706}
+.s-cbs{background:#EDE9FE;color:#7C3AED}
+.s-wn{background:#FCE7F3;color:#BE185D}
+.s-ptp2{background:#CCFBF1;color:#0F766E}
+.s-comp{background:#FEF9C3;color:#854D0E;border:1px solid #FDE68A;animation:compPulse 2s infinite}
+.s-comp-hard{background:#FEE2E2;color:#991B1B;border:1px solid #FECACA;animation:compPulse 1.5s infinite}
+@keyframes compPulse{0%,100%{opacity:1}50%{opacity:.7}}
+.s-unrev{background:#F1F5F9;color:#64748B}
+.s-inprog{background:#FEF3C7;color:#D97706}
+.s-scored{background:#DCFCE7;color:#15803D}
+.s-flagged{background:#FEE2E2;color:#DC2626}
+.s-soft{background:#FEF3C7;color:#92400E}
+.s-hard{background:#FEE2E2;color:#991B1B}
+.s-resolved{background:#DCFCE7;color:#14532D}
+.s-escalated{background:#EDE9FE;color:#5B21B6}
+.s-invest{background:#DBEAFE;color:#1E40AF}
+
+/* TABLE */
+.tbl{width:100%;border-collapse:collapse}
+.tbl th{padding:9px 12px;text-align:left;font-size:11px;font-weight:700;color:var(--tx3);text-transform:uppercase;letter-spacing:.05em;border-bottom:2px solid var(--brd);white-space:nowrap;background:#fff}
+.tbl td{padding:10px 12px;border-bottom:1px solid #F1F5F9;font-size:13px;color:var(--tx);vertical-align:middle}
+.tbl tr:hover td{background:#F8FFFD}
+.tbl tr.comp-row td{background:#FFFBEB}
+.tbl tr.comp-hard-row td{background:#FEF2F2}
+.tbl-wrap{overflow-x:auto;border-radius:var(--r);border:1px solid var(--brd)}
+
+/* FILTER PILLS */
+.pill-bar{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:14px}
+.pill{padding:6px 14px;border-radius:20px;font-size:12px;font-weight:600;cursor:pointer;border:1.5px solid var(--brd);background:#fff;color:var(--tx2);transition:.15s}
+.pill:hover{border-color:var(--comp);color:var(--comp)}
+.pill.on{background:var(--comp);color:#fff;border-color:var(--comp)}
+
+/* PROGRESS BAR */
+.pb{height:6px;background:#E2E8F0;border-radius:3px;overflow:hidden}
+.pb-fill{height:100%;border-radius:3px;transition:.3s}
+.pb-fill.g{background:var(--green)}
+.pb-fill.o{background:var(--orange)}
+.pb-fill.r{background:var(--red)}
+.pb-fill.comp{background:var(--comp)}
+
+/* MODALS */
+.mo{display:none;position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:1000;align-items:center;justify-content:center}
+.mo.op{display:flex}
+.md{background:#fff;border-radius:12px;box-shadow:0 20px 60px rgba(0,0,0,.18);display:flex;flex-direction:column;animation:mdIn .2s ease}
+@keyframes mdIn{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+.md-sm{width:460px;max-height:90vh}
+.md-md{width:600px;max-height:90vh}
+.md-lg{width:880px;max-height:92vh}
+.md-xl{width:1100px;max-height:94vh;height:94vh}
+.md-hd{padding:18px 22px;border-bottom:1px solid var(--brd);display:flex;align-items:center;gap:10px;flex-shrink:0}
+.md-hd h3{font-size:16px;font-weight:700;color:var(--tx);flex:1}
+.md-close{width:28px;height:28px;border-radius:6px;border:none;background:#F1F5F9;cursor:pointer;font-size:16px;display:flex;align-items:center;justify-content:center;color:var(--tx3)}
+.md-close:hover{background:#E2E8F0}
+.md-body{flex:1;overflow-y:auto;padding:22px}
+.md-ft{padding:16px 22px;border-top:1px solid var(--brd);display:flex;align-items:center;gap:10px;justify-content:flex-end;flex-shrink:0}
+
+/* AUDIO PLAYER */
+.audio-player{background:#0C2340;border-radius:10px;padding:14px 16px;display:flex;flex-direction:column;gap:10px}
+.ap-top{display:flex;align-items:center;gap:10px}
+.ap-play{width:36px;height:36px;border-radius:50%;background:var(--comp);border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;color:#fff;font-size:14px;flex-shrink:0;transition:.15s}
+.ap-play:hover{background:var(--comp-d)}
+.ap-info{flex:1}
+.ap-name{font-size:12px;font-weight:600;color:#fff}
+.ap-time{font-size:11px;color:rgba(255,255,255,.5);font-family:'DM Mono',monospace}
+.ap-dl{width:28px;height:28px;border-radius:6px;background:rgba(255,255,255,.1);border:none;cursor:pointer;color:rgba(255,255,255,.6);font-size:12px;display:flex;align-items:center;justify-content:center}
+.ap-dl:hover{background:rgba(255,255,255,.18)}
+.ap-bar{height:4px;background:rgba(255,255,255,.15);border-radius:2px;cursor:pointer;position:relative}
+.ap-fill{height:100%;background:var(--comp);border-radius:2px;width:0%;transition:.1s}
+.ap-controls{display:flex;gap:8px}
+.ap-ctrl{padding:4px 10px;background:rgba(255,255,255,.1);border:none;border-radius:4px;color:rgba(255,255,255,.7);font-size:11px;cursor:pointer;font-family:'DM Sans',sans-serif}
+.ap-ctrl:hover{background:rgba(255,255,255,.18)}
+
+/* SECTION HEADER */
+.sec-hd{font-size:13px;font-weight:700;color:var(--comp);text-transform:uppercase;letter-spacing:.06em;margin-bottom:12px;padding-bottom:8px;border-bottom:2px solid var(--comp-l)}
+
+/* ACTIVITY LOG ENTRY */
+.ae{display:flex;gap:10px;padding:10px 0;border-bottom:1px solid #F8FAFC}
+.ae-dot{width:8px;height:8px;border-radius:50%;margin-top:4px;flex-shrink:0}
+.ae-body{flex:1}
+.ae-title{font-size:13px;font-weight:600;color:var(--tx)}
+.ae-meta{font-size:11px;color:var(--tx3);margin-top:2px}
+
+/* SCORE BADGE */
+.score-badge{display:inline-flex;align-items:center;padding:3px 9px;border-radius:20px;font-size:12px;font-weight:700;font-family:'DM Mono',monospace}
+.score-high{background:#DCFCE7;color:#15803D}
+.score-mid{background:#FEF3C7;color:#D97706}
+.score-low{background:#FEE2E2;color:#DC2626}
+
+/* CHECKLIST */
+.chk-step{border:1.5px solid var(--brd);border-radius:8px;padding:12px 14px;margin-bottom:8px;transition:.15s}
+.chk-step.pass{border-color:#86EFAC;background:#F0FDF4}
+.chk-step.fail{border-color:#FCA5A5;background:#FEF2F2}
+.chk-step.na{border-color:#CBD5E1;background:#F8FAFC;opacity:.7}
+.chk-step-top{display:flex;align-items:center;gap:10px}
+.chk-num{width:22px;height:22px;border-radius:50%;background:var(--comp-l);color:var(--comp);font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.chk-desc{flex:1;font-size:13px;font-weight:500;color:var(--tx)}
+.chk-btns{display:flex;gap:4px}
+.chk-btn{padding:4px 10px;border-radius:4px;font-size:11px;font-weight:600;cursor:pointer;border:1.5px solid var(--brd);background:#fff;color:var(--tx2);transition:.15s;font-family:'DM Sans',sans-serif}
+.chk-btn.pass-btn{border-color:#86EFAC;color:#15803D;background:#F0FDF4}
+.chk-btn.pass-btn.on{background:#22C55E;color:#fff;border-color:#22C55E}
+.chk-btn.fail-btn{border-color:#FCA5A5;color:#DC2626;background:#FEF2F2}
+.chk-btn.fail-btn.on{background:#EF4444;color:#fff;border-color:#EF4444}
+.chk-btn.na-btn{border-color:#CBD5E1;color:#64748B}
+.chk-btn.na-btn.on{background:#94A3B8;color:#fff;border-color:#94A3B8}
+.chk-remark{margin-top:8px;display:none}
+.chk-remark.show{display:block}
+.chk-section-hd{font-size:11px;font-weight:700;color:var(--tx3);text-transform:uppercase;letter-spacing:.06em;margin:14px 0 8px;padding:4px 8px;background:#F8FFFD;border-radius:4px;border-left:3px solid var(--comp)}
+
+/* SCORE SUMMARY BAR */
+.score-bar{background:linear-gradient(135deg,var(--comp-d),var(--comp));border-radius:10px;padding:16px 20px;display:flex;align-items:center;gap:20px;color:#fff}
+.score-pct{font-size:36px;font-weight:700;font-family:'DM Mono',monospace}
+.score-lbl{font-size:12px;opacity:.8}
+.score-detail{flex:1;display:flex;gap:20px}
+.score-stat{text-align:center}
+.score-stat-val{font-size:18px;font-weight:700;font-family:'DM Mono',monospace}
+.score-stat-lbl{font-size:11px;opacity:.75}
+
+/* COMPLAINT STATUS FLOW */
+.status-flow{display:flex;align-items:center;gap:0;margin:16px 0}
+.sf-step{flex:1;text-align:center;position:relative}
+.sf-step::after{content:'';position:absolute;top:14px;left:50%;width:100%;height:2px;background:#E2E8F0;z-index:0}
+.sf-step:last-child::after{display:none}
+.sf-dot{width:28px;height:28px;border-radius:50%;border:2px solid var(--brd);background:#fff;display:flex;align-items:center;justify-content:center;margin:0 auto 6px;font-size:12px;position:relative;z-index:1}
+.sf-step.done .sf-dot{background:var(--comp);border-color:var(--comp);color:#fff}
+.sf-step.active .sf-dot{background:#fff;border-color:var(--comp);color:var(--comp);box-shadow:0 0 0 3px var(--comp-l)}
+.sf-lbl{font-size:10px;font-weight:600;color:var(--tx3)}
+.sf-step.done .sf-lbl,.sf-step.active .sf-lbl{color:var(--comp)}
+
+/* FREQUENCY FLAG */
+.freq-row{display:flex;gap:4px;flex-wrap:wrap}
+.freq-dot{width:8px;height:8px;border-radius:50%;background:var(--comp)}
+.freq-dot.violation{background:var(--red)}
+
+/* INFO BANNER */
+.info-banner{background:var(--comp-l);border:1px solid var(--comp-b);border-radius:8px;padding:12px 16px;font-size:13px;color:var(--comp-d);display:flex;align-items:center;gap:10px;margin-bottom:14px}
+.warn-banner{background:#FFFBEB;border:1px solid #FDE68A;border-radius:8px;padding:12px 16px;font-size:13px;color:#92400E;display:flex;align-items:center;gap:10px;margin-bottom:14px}
+
+/* PURGE CARD */
+.purge-card{border:1.5px solid var(--brd);border-radius:var(--r);padding:16px;background:#fff;transition:.15s}
+.purge-card:hover{box-shadow:var(--shm)}
+.purge-card.urgent{border-color:#FECACA;background:#FEF2F2}
+.purge-card.warn{border-color:#FDE68A;background:#FFFBEB}
+.purge-days{font-size:36px;font-weight:700;font-family:'DM Mono',monospace}
+.purge-days.r{color:var(--red)}
+.purge-days.o{color:var(--orange)}
+.purge-days.g{color:var(--green)}
+
+/* KV */
+.kv{display:flex;gap:6px;margin-bottom:6px}
+.kv-k{font-size:12px;color:var(--tx3);font-weight:500;width:130px;flex-shrink:0}
+.kv-v{font-size:12px;color:var(--tx);font-weight:600}
+
+/* TOGGLE SWITCH */
+.tsw{position:relative;width:36px;height:20px;flex-shrink:0}
+.tsw input{opacity:0;width:0;height:0;position:absolute}
+.tsl{position:absolute;inset:0;background:#CBD5E1;border-radius:10px;cursor:pointer;transition:.2s}
+.tsl::before{content:'';position:absolute;width:14px;height:14px;left:3px;top:3px;background:#fff;border-radius:50%;transition:.2s}
+.tsw input:checked+.tsl{background:var(--comp)}
+.tsw input:checked+.tsl::before{transform:translateX(16px)}
+
+/* AUDIT BANNER */
+.audit-session-banner{background:linear-gradient(135deg,var(--comp-d),var(--comp));color:#fff;padding:8px 20px;font-size:12px;display:flex;align-items:center;gap:10px}
+.audit-on-badge{background:rgba(255,255,255,.2);padding:2px 8px;border-radius:4px;font-size:10px;font-weight:700}
+
+/* LOCKED FILE OVERLAY INDICATOR */
+.locked-indicator{display:flex;align-items:center;gap:6px;font-size:12px;color:var(--tx3);font-weight:500}
+.locked-indicator.hard{color:var(--red)}
+
+/* SCROLLABLE PANEL */
+.scroll-panel{overflow-y:auto;height:100%}
+
+/* SPLIT LAYOUT */
+.split{display:flex;gap:0;height:100%;overflow:hidden}
+.split-left{width:320px;border-right:1px solid var(--brd);display:flex;flex-direction:column;flex-shrink:0;overflow:hidden}
+.split-right{flex:1;display:flex;flex-direction:column;overflow:hidden}
+
+/* REVIEW SPLIT */
+.rev-left{width:400px;flex-shrink:0;border-right:1px solid var(--brd);display:flex;flex-direction:column;overflow:hidden}
+.rev-right{flex:1;display:flex;flex-direction:column;overflow:hidden}
+
+/* ACTIVITY TIMELINE */
+.act-entry{display:flex;gap:12px;padding:10px 0;border-bottom:1px solid #F1F5F9}
+.act-icon{width:32px;height:32px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0}
+
+/* REPORT CARD */
+.rep-card{border:1.5px solid var(--brd);border-radius:var(--r);padding:14px 16px;cursor:pointer;transition:.15s;background:#fff}
+.rep-card:hover{border-color:var(--comp);box-shadow:var(--shm)}
+.rep-card.on{border-color:var(--comp);background:var(--comp-l)}
+.rep-card-ic{font-size:24px;margin-bottom:8px}
+.rep-card-name{font-size:13px;font-weight:700;color:var(--tx)}
+.rep-card-desc{font-size:11px;color:var(--tx3);margin-top:4px}
+
+/* COMPLAINT CASE CARD */
+.cc-entry{border:1.5px solid var(--brd);border-radius:var(--r);padding:14px 16px;margin-bottom:10px;background:#fff;transition:.15s}
+.cc-entry:hover{box-shadow:var(--shm)}
+.cc-entry.soft{border-left:4px solid var(--orange)}
+.cc-entry.hard{border-left:4px solid var(--red);background:#FEF2F2}
+
+/* SESSION CARD */
+.sess-card{border:1.5px solid var(--brd);border-radius:var(--r);padding:16px;background:#fff;transition:.15s}
+.sess-card:hover{box-shadow:var(--shm)}
+.sess-active-dot{width:8px;height:8px;border-radius:50%;background:var(--green);display:inline-block;margin-right:4px}
+
+/* UTILITY */
+.flex{display:flex}.aic{align-items:center}.jcb{justify-content:space-between}.gap4{gap:4px}.gap8{gap:8px}.gap12{gap:12px}.gap16{gap:16px}
+.mt4{margin-top:4px}.mt8{margin-top:8px}.mt12{margin-top:12px}.mt16{margin-top:16px}.mt20{margin-top:20px}
+.mb8{margin-bottom:8px}.mb12{margin-bottom:12px}.mb16{margin-bottom:16px}
+.fw600{font-weight:600}.fw700{font-weight:700}
+.f11{font-size:11px}.f12{font-size:12px}.f13{font-size:13px}
+.tx2c{color:var(--tx2)}.tx3c{color:var(--tx3)}.compc{color:var(--comp)}
+.txt-r{text-align:right}
+.w100{width:100%}
+.divider{height:1px;background:var(--brd);margin:16px 0}
+.hidden{display:none!important}
+.tag{display:inline-flex;align-items:center;padding:2px 8px;border-radius:4px;font-size:11px;font-weight:600}
+.tag-comp{background:var(--comp-l);color:var(--comp)}
+.tag-orange{background:#FEF3C7;color:#D97706}
+.tag-red{background:#FEE2E2;color:#DC2626}
+.tag-green{background:#DCFCE7;color:#15803D}
+.tag-grey{background:#F1F5F9;color:#64748B}
+</style>
+</head>
+<body>
+
+<!-- LOGIN -->
+<div id="s-login">
+  <div class="login-card">
+    <div class="login-left">
+      <div class="login-logo">
+        <div class="login-logo-ic">🛡</div>
+        <div>
+          <div class="login-logo-txt">CollectPro</div>
+          <div class="login-logo-sub">Compliance Portal</div>
+        </div>
+      </div>
+      <div>
+        <div class="login-title">Compliance Access</div>
+        <div class="login-sub">Secure login for compliance monitoring and call quality assurance.</div>
+      </div>
+      <div class="role-tabs">
+        <button class="role-tab on" onclick="selRole(this,'mgr')">👔 Comp. Manager</button>
+        <button class="role-tab" onclick="selRole(this,'exe')">⚡ Comp. Executive</button>
+      </div>
+      <input class="login-inp" type="text" placeholder="Username" id="lu" value="aisha.compliance">
+      <input class="login-inp" type="password" placeholder="Password" id="lp" value="••••••••">
+      <button class="login-btn" onclick="doLogin()">Sign In as Compliance</button>
+      <div class="login-meta">
+        <span>🔒 Secure access</span>
+        <span id="roleLabel">🛡 Role: Compliance Manager</span>
+      </div>
+    </div>
+    <div class="login-right">
+      <h2>Welcome to <span>BOLT</span></h2>
+      <p>Compliance monitoring, call quality assurance and regulatory oversight for Newvest Recoveries.</p>
+      <div class="bolt-list">
+        <div class="bolt-item"><div class="bolt-letter">B</div><div class="bolt-desc"><strong>Built for Compliance</strong><br>Full audit trail and call scoring</div></div>
+        <div class="bolt-item"><div class="bolt-letter">O</div><div class="bolt-desc"><strong>Oversight Ready</strong><br>Monitor collectors against scripts</div></div>
+        <div class="bolt-item"><div class="bolt-letter">L</div><div class="bolt-desc"><strong>Linked to Operations</strong><br>COMP status syncs across all portals</div></div>
+        <div class="bolt-item"><div class="bolt-letter">T</div><div class="bolt-desc"><strong>Traceable Actions</strong><br>Every decision logged and exportable</div></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- MAIN SHELL -->
+<div id="s-main">
+  <div class="shell">
+
+    <!-- SIDEBAR -->
+    <div class="sb">
+      <div class="sb-top">
+        <div class="sb-logo">
+          <div class="sb-logo-ic">🛡</div>
+          <div>
+            <div class="sb-logo-txt">CollectPro</div>
+            <div class="sb-logo-sub">Compliance Portal</div>
+          </div>
+        </div>
+      </div>
+      <div class="sb-user">
+        <div class="flex aic gap8">
+          <div class="sb-av" id="sbAv" style="background:linear-gradient(135deg,#0F766E,#0D5D57)">AC</div>
+          <div>
+            <div class="sb-uname" id="sbName">Aisha Compliance</div>
+            <span class="sb-urole mgr" id="sbRole">COMP. MANAGER</span>
+          </div>
+        </div>
+      </div>
+      <div class="sb-nav">
+        <div class="sb-grp">MAIN</div>
+        <div class="sb-item on" onclick="nav('dashboard')">📊 Dashboard</div>
+        <div class="sb-grp">WORK</div>
+        <div class="sb-item" onclick="nav('call-review')">🎧 Call Review Queue <span class="sb-badge" id="reviewBadge">12</span></div>
+        <div class="sb-item" onclick="nav('call-frequency')">📊 Frequency Monitor <span class="sb-badge" id="freqBadge">5</span></div>
+        <div class="sb-item" onclick="nav('complaints')">⚠️ Complaint Cases <span class="sb-badge" id="compBadge">3</span></div>
+        <div class="sb-grp">REPORTS</div>
+        <div class="sb-item" onclick="nav('scoring-reports')">📈 Scoring Reports</div>
+        <div class="sb-item" id="purgeNavItem" onclick="nav('purge-report')">🗂 Purge Oversight</div>
+        <div class="sb-grp" id="mgmtGrp">MANAGEMENT</div>
+        <div class="sb-item" id="auditNavItem" onclick="nav('audit-control')">🔐 Audit Control Panel</div>
+        <div class="sb-item" onclick="nav('activity-log')">📜 Activity Log</div>
+      </div>
+      <div class="sb-logout">
+        <div class="sb-logout-btn" onclick="doLogout()">⏻ &nbsp;Sign Out</div>
+      </div>
+    </div>
+
+    <!-- PAGE CONTENT -->
+    <div class="pc">
+
+      <!-- DASHBOARD -->
+      <div class="screen active" id="s-dashboard">
+        <div class="tb">
+          <div class="tb-title">Dashboard</div>
+          <div class="tb-badge" id="tbRoleBadge">COMPLIANCE MANAGER</div>
+          <span class="f12 tx3c" id="tbDate"></span>
+        </div>
+        <div class="main">
+          <div class="row4 mb16">
+            <div class="tile" style="border-top-color:#0284C7" onclick="nav('call-review')">
+              <div class="tile-lbl">Calls Pending Review</div>
+              <div class="tile-val">12</div>
+              <div class="tile-sub o">↑ 4 since yesterday</div>
+            </div>
+            <div class="tile" style="border-top-color:#EF4444" onclick="nav('complaints')">
+              <div class="tile-lbl">Open Complaints</div>
+              <div class="tile-val">3</div>
+              <div class="tile-sub r">1 hard locked</div>
+            </div>
+            <div class="tile" style="border-top-color:#F59E0B" onclick="nav('call-frequency')">
+              <div class="tile-lbl">Frequency Violations</div>
+              <div class="tile-val">5</div>
+              <div class="tile-sub o">Pending review</div>
+            </div>
+            <div class="tile" id="purgeTile" style="border-top-color:#0F766E" onclick="nav('purge-report')">
+              <div class="tile-lbl">Purge Reports Due</div>
+              <div class="tile-val">2</div>
+              <div class="tile-sub r">Within 7 days</div>
+            </div>
+          </div>
+          <div class="row3 mb16">
+            <div class="tile" style="border-top-color:#22C55E;cursor:default">
+              <div class="tile-lbl">Calls Reviewed Today</div>
+              <div class="tile-val">8</div>
+              <div class="tile-sub g">+2 from yesterday</div>
+            </div>
+            <div class="tile" style="border-top-color:#0F766E;cursor:default">
+              <div class="tile-lbl">Compliance Score Avg (MTD)</div>
+              <div class="tile-val">82%</div>
+              <div class="tile-sub g">↑ 3% from last month</div>
+            </div>
+            <div class="tile" id="auditSessionTile" style="border-top-color:#7C3AED;cursor:pointer" onclick="nav('audit-control')">
+              <div class="tile-lbl">Active Audit Sessions</div>
+              <div class="tile-val">1</div>
+              <div class="tile-sub" style="color:#7C3AED">Maybank — Mar 2026</div>
+            </div>
+          </div>
+          <div class="row3">
+            <div class="card" style="grid-column:span 1">
+              <div class="sec-hd">Recent Frequency Flags</div>
+              <div id="dashFreqList"></div>
+              <div class="mt12"><button class="btn btn-out btn-sm w100" onclick="nav('call-frequency')">View All Flags</button></div>
+            </div>
+            <div class="card" style="grid-column:span 1">
+              <div class="sec-hd">Recent Complaints</div>
+              <div id="dashComplaintList"></div>
+              <div class="mt12"><button class="btn btn-out btn-sm w100" onclick="nav('complaints')">View All Cases</button></div>
+            </div>
+            <div class="card" id="purgeDashCard">
+              <div class="sec-hd">Upcoming Purge Deadlines</div>
+              <div id="dashPurgeList"></div>
+              <div class="mt12"><button class="btn btn-out btn-sm w100" onclick="nav('purge-report')">View All</button></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- CALL REVIEW QUEUE -->
+      <div class="screen" id="s-call-review">
+        <div class="tb">
+          <div class="tb-title">Call Review Queue</div>
+          <button class="tb-btn out" onclick="om('m-bulk-export')">⬇ Export Selected</button>
+          <button class="tb-btn comp" onclick="om('m-call-review')">▶ Open Review</button>
+        </div>
+        <div class="main">
+          <div class="flex gap12 mb12">
+            <select class="inp" style="width:160px"><option>All Clients</option><option>CIMB Bank</option><option>Maybank</option><option>RHB Bank</option></select>
+            <select class="inp" style="width:160px"><option>All Collectors</option><option>Nurul Ain</option><option>Mohd Hafiz</option><option>Farah Liyana</option></select>
+            <input class="inp" type="date" style="width:150px">
+            <input class="inp" type="date" style="width:150px">
+            <button class="btn btn-comp btn-sm">🔍 Filter</button>
+          </div>
+          <div class="pill-bar" id="reviewPills">
+            <div class="pill on" onclick="setRevPill(this,'all')">All</div>
+            <div class="pill" onclick="setRevPill(this,'unreviewed')">⬜ Unreviewed</div>
+            <div class="pill" onclick="setRevPill(this,'inprog')">🟡 In Progress</div>
+            <div class="pill" onclick="setRevPill(this,'scored')">🟢 Scored</div>
+            <div class="pill" onclick="setRevPill(this,'flagged')">🔴 Flagged</div>
+          </div>
+          <div class="tbl-wrap">
+            <table class="tbl">
+              <thead><tr>
+                <th><input type="checkbox" onchange="crChkAll(this)"></th>
+                <th>Date & Time</th><th>Collector</th><th>Debtor</th><th>Account No.</th>
+                <th>Client</th><th>Product</th><th>Duration</th><th>Call Status</th>
+                <th>Review Status</th><th>Score</th><th>Actions</th>
+              </tr></thead>
+              <tbody id="reviewTbody"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- CALL FREQUENCY MONITOR -->
+      <div class="screen" id="s-call-frequency">
+        <div class="tb">
+          <div class="tb-title">Call Frequency Monitor</div>
+          <span class="f12 tx3c">Rolling 7-day window per debtor</span>
+        </div>
+        <div class="main">
+          <div class="row4 mb16">
+            <div class="tile" style="border-top-color:#0284C7;cursor:default">
+              <div class="tile-lbl">Total Monitored</div><div class="tile-val">247</div>
+            </div>
+            <div class="tile" style="border-top-color:#F59E0B;cursor:default">
+              <div class="tile-lbl">Flagged This Week</div><div class="tile-val">5</div><div class="tile-sub o">Exceeds 3 calls</div>
+            </div>
+            <div class="tile" style="border-top-color:#EF4444;cursor:default">
+              <div class="tile-lbl">Violations Confirmed</div><div class="tile-val">2</div>
+            </div>
+            <div class="tile" style="border-top-color:#22C55E;cursor:default">
+              <div class="tile-lbl">Accepted (Justified)</div><div class="tile-val">1</div>
+            </div>
+          </div>
+          <div class="pill-bar">
+            <div class="pill on" onclick="setFreqPill(this,'all')">All</div>
+            <div class="pill" onclick="setFreqPill(this,'flagged')">🔴 Flagged (&gt;3 calls)</div>
+            <div class="pill" onclick="setFreqPill(this,'pending')">🟡 Under Review</div>
+            <div class="pill" onclick="setFreqPill(this,'accepted')">✅ Accepted</div>
+            <div class="pill" onclick="setFreqPill(this,'violation')">⛔ Violation</div>
+          </div>
+          <div class="tbl-wrap">
+            <table class="tbl">
+              <thead><tr>
+                <th>Debtor</th><th>Account No.</th><th>Client</th><th>Collector</th>
+                <th>Calls (7-Day)</th><th>Call Dates</th><th>Status Codes</th><th>Flag Status</th><th>Actions</th>
+              </tr></thead>
+              <tbody id="freqTbody"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- COMPLAINT CASES -->
+      <div class="screen" id="s-complaints">
+        <div class="tb">
+          <div class="tb-title">Complaint Cases</div>
+          <button class="tb-btn comp" onclick="om('m-complaint-intake')">+ New Complaint</button>
+        </div>
+        <div class="main">
+          <div class="row4 mb16">
+            <div class="tile" style="border-top-color:#0284C7;cursor:default">
+              <div class="tile-lbl">Total Open</div><div class="tile-val">3</div>
+            </div>
+            <div class="tile" style="border-top-color:#F59E0B;cursor:default">
+              <div class="tile-lbl">Soft Locked</div><div class="tile-val">2</div><div class="tile-sub o">Collector can see, cannot open</div>
+            </div>
+            <div class="tile" style="border-top-color:#EF4444;cursor:default">
+              <div class="tile-lbl">Hard Locked (Parked)</div><div class="tile-val">1</div><div class="tile-sub r">Hidden from operations</div>
+            </div>
+            <div class="tile" style="border-top-color:#22C55E;cursor:default">
+              <div class="tile-lbl">Resolved This Month</div><div class="tile-val">4</div>
+            </div>
+          </div>
+          <div class="pill-bar">
+            <div class="pill on" onclick="setCompPill(this,'all')">All</div>
+            <div class="pill" onclick="setCompPill(this,'received')">📨 Received</div>
+            <div class="pill" onclick="setCompPill(this,'soft')">🟡 Soft Locked</div>
+            <div class="pill" onclick="setCompPill(this,'hard')">🔴 Hard Locked</div>
+            <div class="pill" onclick="setCompPill(this,'invest')">🔍 Under Investigation</div>
+            <div class="pill" onclick="setCompPill(this,'resolved')">✅ Resolved</div>
+            <div class="pill" onclick="setCompPill(this,'escalated')">📤 Escalated</div>
+          </div>
+          <div class="tbl-wrap">
+            <table class="tbl">
+              <thead><tr>
+                <th>Client</th><th>Account No.</th><th>Debtor</th><th>Received Date</th>
+                <th>Received Via</th><th>Summary</th><th>Severity</th><th>Lock Status</th>
+                <th>Assigned To</th><th>Actions</th>
+              </tr></thead>
+              <tbody id="complaintTbody"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- SCORING REPORTS -->
+      <div class="screen" id="s-scoring-reports">
+        <div class="tb">
+          <div class="tb-title">Scoring Reports</div>
+          <button class="tb-btn out" onclick="exportReport('excel')">⬇ Excel</button>
+          <button class="tb-btn out" onclick="exportReport('pdf')">⬇ PDF</button>
+        </div>
+        <div class="main">
+          <div class="pill-bar">
+            <div class="pill on" onclick="setSrTab(this,'scorecard')">📋 Collector Scorecard</div>
+            <div class="pill" onclick="setSrTab(this,'quality')">📊 Call Quality Summary</div>
+            <div class="pill" onclick="setSrTab(this,'violation')">⛔ Violation Log</div>
+          </div>
+          <div class="card mb16">
+            <div class="flex gap12 aic">
+              <select class="inp" style="width:160px"><option>All Clients</option><option>CIMB Bank</option><option>Maybank</option></select>
+              <select class="inp" style="width:160px"><option>All Teams</option><option>Team Alpha</option><option>Team Beta</option></select>
+              <select class="inp" style="width:160px"><option>All Collectors</option><option>Nurul Ain</option><option>Mohd Hafiz</option></select>
+              <input class="inp" type="date" style="width:140px" value="2026-03-01">
+              <input class="inp" type="date" style="width:140px" value="2026-03-28">
+              <button class="btn btn-comp" onclick="genScoringReport()">Generate</button>
+            </div>
+          </div>
+          <div id="srResult" class="hidden">
+            <div class="row4 mb16" id="srKpi"></div>
+            <div class="tbl-wrap"><table class="tbl"><thead id="srHead"></thead><tbody id="srBody"></tbody></table></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- PURGE OVERSIGHT -->
+      <div class="screen" id="s-purge-report">
+        <div class="tb">
+          <div class="tb-title">Purge Oversight Report</div>
+          <span class="f12 tx3c">Grace period varies per client · Auto-purge at 90 days default</span>
+        </div>
+        <div class="main">
+          <div class="warn-banner">⚠️ Files approaching purge deadline require compliance sign-off before client report can be exported.</div>
+          <div id="purgeCards" class="row3"></div>
+        </div>
+      </div>
+
+      <!-- AUDIT CONTROL PANEL -->
+      <div class="screen" id="s-audit-control">
+        <div class="tb">
+          <div class="tb-title">Audit Control Panel</div>
+          <div class="tb-badge" style="background:#FEF3C7;color:#92400E">MANAGER ONLY</div>
+          <button class="tb-btn comp" onclick="om('m-audit-session')">+ Create Audit Session</button>
+        </div>
+        <div class="main">
+          <div class="row4 mb16">
+            <div class="tile" style="border-top-color:#22C55E;cursor:default"><div class="tile-lbl">Active Sessions</div><div class="tile-val">1</div></div>
+            <div class="tile" style="border-top-color:#0284C7;cursor:default"><div class="tile-lbl">Total Sessions</div><div class="tile-val">4</div></div>
+            <div class="tile" style="border-top-color:#0F766E;cursor:default"><div class="tile-lbl">Staff with Access</div><div class="tile-val">2</div></div>
+            <div class="tile" style="border-top-color:#F59E0B;cursor:default"><div class="tile-lbl">Clients Covered</div><div class="tile-val">1</div></div>
+          </div>
+          <div class="tbl-wrap">
+            <table class="tbl">
+              <thead><tr>
+                <th>Staff Member</th><th>Audit Username</th><th>Client(s) Scoped</th>
+                <th>Created</th><th>Notes</th><th>Status</th><th>Actions</th>
+              </tr></thead>
+              <tbody id="auditTbody"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- ACTIVITY LOG -->
+      <div class="screen" id="s-activity-log">
+        <div class="tb">
+          <div class="tb-title">Activity Log</div>
+          <button class="tb-btn out">⬇ Export</button>
+        </div>
+        <div class="main">
+          <div id="exeLogBanner" class="info-banner hidden">ℹ️ Showing your own actions only.</div>
+          <div class="pill-bar">
+            <div class="pill on" onclick="setLogTab(this,'all')">All Activity</div>
+            <div class="pill" onclick="setLogTab(this,'review')">Call Reviews</div>
+            <div class="pill" onclick="setLogTab(this,'complaint')">Complaint Actions</div>
+            <div class="pill" onclick="setLogTab(this,'freq')">Frequency Decisions</div>
+            <div class="pill" onclick="setLogTab(this,'export')">Report Exports</div>
+            <div class="pill" onclick="setLogTab(this,'audit')">Audit Sessions</div>
+          </div>
+          <div class="flex gap12 mb12">
+            <input class="inp" type="date" style="width:150px" value="2026-03-01">
+            <input class="inp" type="date" style="width:150px" value="2026-03-28">
+            <select class="inp" style="width:160px" id="logUserFilter"><option>All Users</option></select>
+            <button class="btn btn-comp btn-sm">Apply</button>
+          </div>
+          <div class="tbl-wrap">
+            <table class="tbl">
+              <thead><tr><th>Time</th><th>User</th><th>Role</th><th>Action Type</th><th>Detail</th><th>Client</th><th>Account</th></tr></thead>
+              <tbody id="logTbody"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- end .pc -->
+  </div><!-- end .shell -->
+</div><!-- end #s-main -->
+
+<!-- ======== MODALS ======== -->
+
+<!-- CALL REVIEW MODAL -->
+<div class="mo" id="m-call-review">
+  <div class="md md-xl">
+    <div class="md-hd">
+      <span>🎧</span>
+      <h3>Call Review — <span id="crDebtorName">Ahmad Hassan</span></h3>
+      <span class="spill s-unrev" id="crStatus">Unreviewed</span>
+      <button class="md-close" onclick="cm('m-call-review')">✕</button>
+    </div>
+    <div style="display:flex;height:calc(94vh - 130px);overflow:hidden">
+      <!-- LEFT -->
+      <div class="rev-left" style="padding:18px;overflow-y:auto">
+        <div class="sec-hd">Recording</div>
+        <div class="audio-player mb16">
+          <div class="ap-top">
+            <button class="ap-play" id="crPlayBtn" onclick="crTogglePlay()">▶</button>
+            <div class="ap-info">
+              <div class="ap-name" id="crAudioName">Call — 24 Mar 2026, 10:14 AM</div>
+              <div class="ap-time"><span id="crCurTime">00:00</span> / <span id="crDuration">04:32</span></div>
+            </div>
+            <button class="ap-dl">⬇</button>
+          </div>
+          <div class="ap-bar" onclick="crSeek(event,this)"><div class="ap-fill" id="crApFill"></div></div>
+          <div class="ap-controls">
+            <button class="ap-ctrl" onclick="crSeekRel(-10)">−10s</button>
+            <button class="ap-ctrl" onclick="crSeekRel(10)">+10s</button>
+          </div>
+        </div>
+        <div class="sec-hd">Call Details</div>
+        <div class="kv"><span class="kv-k">Collector</span><span class="kv-v" id="crCollector">Nurul Ain</span></div>
+        <div class="kv"><span class="kv-k">Debtor</span><span class="kv-v" id="crDebtor">Ahmad Hassan</span></div>
+        <div class="kv"><span class="kv-k">Account No.</span><span class="kv-v mono" id="crAcct">ACC-2024-001</span></div>
+        <div class="kv"><span class="kv-k">Client</span><span class="kv-v" id="crClient">CIMB Bank</span></div>
+        <div class="kv"><span class="kv-k">Product</span><span class="kv-v" id="crProduct">Personal Loan</span></div>
+        <div class="kv"><span class="kv-k">Call Date</span><span class="kv-v">24 Mar 2026, 10:14 AM</span></div>
+        <div class="kv"><span class="kv-k">Duration</span><span class="kv-v mono">04:32</span></div>
+        <div class="kv"><span class="kv-k">Status Code</span><span class="kv-v"><span class="spill s-ptp">PTP</span></span></div>
+        <div class="kv"><span class="kv-k">Collector Remark</span><span class="kv-v" style="font-size:12px;color:var(--tx2)">PTP secured — RM 2,000 by 31 Mar 2026.</span></div>
+        <div class="divider"></div>
+        <div class="sec-hd">Reference Script</div>
+        <div style="background:#F8FAFC;border:1px solid var(--brd);border-radius:8px;padding:12px;font-size:12px;color:var(--tx2);line-height:1.6">
+          <div class="flex aic gap8 mb8"><span style="font-weight:600;color:var(--tx)">CIMB Bank — Personal Loan Script</span><span class="tag tag-comp">v2.1</span></div>
+          <div>Client document uploaded: <strong>CIMB_PL_Script_Feb2026.pdf</strong></div>
+          <div class="mt8"><a href="#" onclick="return false" style="color:var(--comp);font-weight:600">📄 View Full Script Document</a></div>
+        </div>
+      </div>
+      <!-- RIGHT -->
+      <div class="rev-right" style="padding:18px;overflow-y:auto">
+        <div class="flex aic jcb mb12">
+          <div class="sec-hd" style="margin-bottom:0">Compliance Checklist</div>
+          <div class="flex gap8 aic">
+            <span class="f12 tx3c">Script: CIMB Bank — Personal Loan</span>
+            <span class="tag tag-comp">v2.1</span>
+          </div>
+        </div>
+        <div id="crScoreBar" class="score-bar mb16">
+          <div><div class="score-pct" id="crScorePct">—</div><div class="score-lbl">Compliance Score</div></div>
+          <div class="score-detail">
+            <div class="score-stat"><div class="score-stat-val" id="crPass">0</div><div class="score-stat-lbl">Passed</div></div>
+            <div class="score-stat"><div class="score-stat-val" id="crFail">0</div><div class="score-stat-lbl">Failed</div></div>
+            <div class="score-stat"><div class="score-stat-val" id="crNa">0</div><div class="score-stat-lbl">N/A</div></div>
+            <div class="score-stat"><div class="score-stat-val" id="crTotal">8</div><div class="score-stat-lbl">Total Steps</div></div>
+          </div>
+        </div>
+        <div id="crChecklist"></div>
+        <div class="divider"></div>
+        <div class="fg mb12">
+          <label>Overall Compliance Remarks</label>
+          <textarea class="inp" rows="3" id="crOverallRemark" placeholder="Summary of call quality and any notable issues..."></textarea>
+        </div>
+      </div>
+    </div>
+    <div class="md-ft">
+      <button class="btn btn-grey" onclick="crSaveDraft()">💾 Save Draft</button>
+      <button class="btn btn-comp" onclick="crSubmit()">✓ Submit Score</button>
+    </div>
+  </div>
+</div>
+
+<!-- FREQUENCY REVIEW MODAL -->
+<div class="mo" id="m-freq-review">
+  <div class="md md-lg">
+    <div class="md-hd">
+      <span>📊</span>
+      <h3>Frequency Review — <span id="frDebtorName">Ahmad Hassan</span></h3>
+      <span class="tag tag-orange">⚠️ 5 calls in 7 days</span>
+      <button class="md-close" onclick="cm('m-freq-review')">✕</button>
+    </div>
+    <div class="md-body">
+      <div class="warn-banner">🔔 This debtor has been called <strong id="frCallCount">5 times</strong> in the last 7 days. The allowed maximum is <strong>3 calls per rolling week</strong>. Review the call records below and decide.</div>
+      <div class="sec-hd">Call Timeline (Rolling 7 Days)</div>
+      <div id="frTimeline"></div>
+      <div class="divider"></div>
+      <div class="fg">
+        <label>Compliance Notes</label>
+        <textarea class="inp" rows="3" id="frNotes" placeholder="Document the reason for your decision..."></textarea>
+      </div>
+    </div>
+    <div class="md-ft">
+      <button class="btn btn-grey" onclick="cm('m-freq-review')">Cancel</button>
+      <button class="btn btn-green" onclick="frDecide('accepted')">✓ Accept — Justified</button>
+      <button class="btn btn-red" onclick="frDecide('violation')">⛔ Mark as Violation</button>
+    </div>
+  </div>
+</div>
+
+<!-- COMPLAINT INTAKE MODAL -->
+<div class="mo" id="m-complaint-intake">
+  <div class="md md-lg">
+    <div class="md-hd">
+      <span>⚠️</span>
+      <h3>New Complaint Case</h3>
+      <button class="md-close" onclick="cm('m-complaint-intake')">✕</button>
+    </div>
+    <div class="md-body">
+      <div class="grid2 mb12">
+        <div class="fg"><label>Client *</label>
+          <select class="inp"><option>-- Select Client --</option><option>CIMB Bank</option><option>Maybank</option><option>RHB Bank</option><option>Hong Leong</option></select></div>
+        <div class="fg"><label>Account No. *</label><input class="inp" type="text" placeholder="ACC-2024-XXX" id="ciAcct"></div>
+      </div>
+      <div class="grid2 mb12">
+        <div class="fg"><label>Complaint Date Received *</label><input class="inp" type="date" id="ciDate"></div>
+        <div class="fg"><label>Received Via *</label>
+          <select class="inp" id="ciVia"><option>Email</option><option>Phone Call</option><option>Letter</option><option>Portal</option></select></div>
+      </div>
+      <div class="fg mb12"><label>Client Reference No. (if provided)</label><input class="inp" type="text" placeholder="e.g. CIMB-COMP-2026-0042"></div>
+      <div class="fg mb12"><label>Complaint Description *</label>
+        <textarea class="inp" rows="4" id="ciDesc" placeholder="Describe the complaint received from the client..."></textarea></div>
+      <div class="grid2 mb12">
+        <div class="fg"><label>Severity *</label>
+          <select class="inp" id="ciSeverity">
+            <option value="low">🟢 Low</option>
+            <option value="medium" selected>🟡 Medium</option>
+            <option value="high">🔴 High</option>
+          </select></div>
+        <div class="fg"><label>Assigned To</label>
+          <select class="inp"><option>Me (Self-assign)</option><option>Nurul Compliance</option><option>Razif Compliance</option></select></div>
+      </div>
+      <div class="fg mb12"><label>Link Call Recording (if available)</label>
+        <select class="inp"><option>-- No recording linked --</option><option>24 Mar 2026 10:14AM — Ahmad Hassan — 04:32</option><option>22 Mar 2026 02:30PM — Ahmad Hassan — 02:15</option></select></div>
+      <div class="fg mb12"><label>Initial Lock Action *</label>
+        <div class="flex gap12 mt4">
+          <label class="flex aic gap8"><input type="radio" name="lockAction" value="none" checked> No Lock (file stays normal)</label>
+          <label class="flex aic gap8"><input type="radio" name="lockAction" value="soft"> 🟡 Soft Lock (COMP — visible, locked)</label>
+          <label class="flex aic gap8"><input type="radio" name="lockAction" value="hard"> 🔴 Hard Lock (COMP — hidden from operations)</label>
+        </div>
+      </div>
+      <div class="info-banner">ℹ️ <strong>COMP Status:</strong> Applying any lock will change the file status to COMP across all collection portals. The original status is preserved and will be restored on release.</div>
+    </div>
+    <div class="md-ft">
+      <button class="btn btn-grey" onclick="cm('m-complaint-intake')">Cancel</button>
+      <button class="btn btn-comp" onclick="saveComplaint()">Create Complaint Case</button>
+    </div>
+  </div>
+</div>
+
+<!-- COMPLAINT DETAIL MODAL -->
+<div class="mo" id="m-complaint-detail">
+  <div class="md md-xl">
+    <div class="md-hd">
+      <span>⚠️</span>
+      <h3>Complaint Case — <span id="cdAcct" class="mono">ACC-2024-003</span></h3>
+      <span class="spill s-hard" id="cdLockStatus">Hard Locked</span>
+      <button class="md-close" onclick="cm('m-complaint-detail')">✕</button>
+    </div>
+    <div style="display:flex;height:calc(94vh - 130px);overflow:hidden">
+      <!-- LEFT -->
+      <div class="rev-left" style="padding:18px;overflow-y:auto">
+        <div class="sec-hd">Case Details</div>
+        <div class="kv"><span class="kv-k">Client</span><span class="kv-v">Maybank</span></div>
+        <div class="kv"><span class="kv-k">Account No.</span><span class="kv-v mono">ACC-2024-003</span></div>
+        <div class="kv"><span class="kv-k">Debtor</span><span class="kv-v">Siti Rahayu</span></div>
+        <div class="kv"><span class="kv-k">Collector</span><span class="kv-v">Mohd Hafiz</span></div>
+        <div class="kv"><span class="kv-k">Received Date</span><span class="kv-v">20 Mar 2026</span></div>
+        <div class="kv"><span class="kv-k">Received Via</span><span class="kv-v">Email</span></div>
+        <div class="kv"><span class="kv-k">Client Ref No.</span><span class="kv-v mono">MBANK-COMP-0042</span></div>
+        <div class="kv"><span class="kv-k">Severity</span><span class="kv-v"><span class="tag tag-red">🔴 High</span></span></div>
+        <div class="kv"><span class="kv-k">Assigned To</span><span class="kv-v">Aisha Compliance</span></div>
+        <div class="divider"></div>
+        <div class="sec-hd">Complaint Description</div>
+        <div style="font-size:13px;color:var(--tx2);line-height:1.6;background:#FEF2F2;border-radius:8px;padding:12px;border:1px solid #FECACA">
+          Customer reported that collector called more than 3 times in one week and used inappropriate language during the call on 18 March 2026. Bank has requested immediate investigation.
+        </div>
+        <div class="divider"></div>
+        <div class="sec-hd">Linked Recording</div>
+        <div class="audio-player">
+          <div class="ap-top">
+            <button class="ap-play">▶</button>
+            <div class="ap-info">
+              <div class="ap-name">18 Mar 2026, 3:42 PM — Mohd Hafiz</div>
+              <div class="ap-time">00:00 / 03:18</div>
+            </div>
+            <button class="ap-dl">⬇</button>
+          </div>
+          <div class="ap-bar"><div class="ap-fill" style="width:0%"></div></div>
+        </div>
+        <div class="divider"></div>
+        <div class="sec-hd">Lock Status</div>
+        <div class="flex gap8 aic">
+          <span class="spill s-hard">🔒 Hard Locked</span>
+          <span class="f12 tx3c">Hidden from all operations</span>
+        </div>
+        <div class="mt8">
+          <button class="btn btn-out btn-sm" id="cdUnlockBtn" onclick="cdUnlock()">🔓 Release Lock (Manager Only)</button>
+        </div>
+      </div>
+      <!-- RIGHT -->
+      <div class="rev-right" style="padding:18px;overflow-y:auto">
+        <div class="sec-hd">Case Status Flow</div>
+        <div class="status-flow">
+          <div class="sf-step done"><div class="sf-dot">✓</div><div class="sf-lbl">Received</div></div>
+          <div class="sf-step done"><div class="sf-dot">✓</div><div class="sf-lbl">Hard Lock Applied</div></div>
+          <div class="sf-step active"><div class="sf-dot">●</div><div class="sf-lbl">Under Investigation</div></div>
+          <div class="sf-step"><div class="sf-dot">○</div><div class="sf-lbl">Resolved</div></div>
+          <div class="sf-step"><div class="sf-dot">○</div><div class="sf-lbl">Escalated</div></div>
+        </div>
+        <div class="divider"></div>
+        <div class="sec-hd">Action Log</div>
+        <div id="cdActionLog">
+          <div class="act-entry">
+            <div class="act-icon" style="background:#FEE2E2">🔒</div>
+            <div><div class="ae-title">Hard Lock Applied</div><div class="ae-meta">Aisha Compliance · 20 Mar 2026, 09:15 AM · File hidden from operations</div></div>
+          </div>
+          <div class="act-entry">
+            <div class="act-icon" style="background:#DBEAFE">📨</div>
+            <div><div class="ae-title">Complaint Received — Maybank email</div><div class="ae-meta">Aisha Compliance · 20 Mar 2026, 09:00 AM · High severity</div></div>
+          </div>
+        </div>
+        <div class="divider"></div>
+        <div class="sec-hd">Add Action</div>
+        <div class="fg mb12">
+          <label>Action Type</label>
+          <select class="inp" id="cdActionType">
+            <option>Call Recording Reviewed</option>
+            <option>Statement Requested from Collector</option>
+            <option>Escalated to Senior Compliance</option>
+            <option>Client Updated</option>
+            <option>Lock Status Changed</option>
+            <option>Case Resolved</option>
+            <option>Case Escalated to Client</option>
+          </select>
+        </div>
+        <div class="fg mb12"><label>Notes</label>
+          <textarea class="inp" rows="3" id="cdActionNotes" placeholder="Document your investigation notes..."></textarea></div>
+        <div class="fg mb12"><label>Change Status To</label>
+          <select class="inp" id="cdNewStatus">
+            <option value="">— No status change —</option>
+            <option value="invest">Under Investigation</option>
+            <option value="resolved">Resolved</option>
+            <option value="escalated">Escalated to Client</option>
+          </select></div>
+        <div class="flex gap8">
+          <button class="btn btn-comp w100" onclick="cdAddAction()">Add Action & Update</button>
+          <button class="btn btn-out" onclick="cdEscalate()">📤 Escalate to Client</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- LOCK CONFIRM MODAL -->
+<div class="mo" id="m-lock-confirm">
+  <div class="md md-sm">
+    <div class="md-hd"><span id="lcIcon">🟡</span><h3 id="lcTitle">Apply Soft Lock</h3><button class="md-close" onclick="cm('m-lock-confirm')">✕</button></div>
+    <div class="md-body">
+      <div id="lcMsg" class="warn-banner"></div>
+      <div class="kv"><span class="kv-k">Account</span><span class="kv-v mono" id="lcAcct">—</span></div>
+      <div class="kv"><span class="kv-k">Debtor</span><span class="kv-v" id="lcDebtor">—</span></div>
+      <div class="kv"><span class="kv-k">Lock Type</span><span class="kv-v" id="lcType">—</span></div>
+      <div class="info-banner mt12">ℹ️ Status will change to <strong>COMP</strong> across all collection portals immediately.</div>
+    </div>
+    <div class="md-ft">
+      <button class="btn btn-grey" onclick="cm('m-lock-confirm')">Cancel</button>
+      <button class="btn btn-red" id="lcConfirmBtn" onclick="doLock()">Confirm Lock</button>
+    </div>
+  </div>
+</div>
+
+<!-- ESCALATE MODAL -->
+<div class="mo" id="m-escalate">
+  <div class="md md-md">
+    <div class="md-hd"><span>📤</span><h3>Escalate to Client</h3><button class="md-close" onclick="cm('m-escalate')">✕</button></div>
+    <div class="md-body">
+      <div class="warn-banner">⚠️ This will generate a formal complaint summary for the client. Manager approval is required before export.</div>
+      <div class="fg mb12"><label>Summary of Investigation</label>
+        <textarea class="inp" rows="4" placeholder="Summarise the investigation findings and actions taken..."></textarea></div>
+      <div class="fg mb12"><label>Outcome</label>
+        <select class="inp"><option>Complaint Upheld — Action Taken</option><option>Complaint Not Upheld — Explanation Provided</option><option>Under Further Investigation</option></select></div>
+      <div class="fg mb12"><label>Export Format</label>
+        <div class="flex gap12">
+          <label class="flex aic gap8"><input type="checkbox" checked> 📄 PDF (Formal Letter)</label>
+          <label class="flex aic gap8"><input type="checkbox"> 📊 Excel</label>
+        </div>
+      </div>
+    </div>
+    <div class="md-ft">
+      <button class="btn btn-grey" onclick="cm('m-escalate')">Cancel</button>
+      <button class="btn btn-comp" onclick="doEscalate()">Submit for Manager Approval</button>
+    </div>
+  </div>
+</div>
+
+<!-- PURGE REPORT MODAL -->
+<div class="mo" id="m-purge-report">
+  <div class="md md-md">
+    <div class="md-hd"><span>🗂</span><h3>Generate Purge Report</h3><button class="md-close" onclick="cm('m-purge-report')">✕</button></div>
+    <div class="md-body">
+      <div class="kv mb8"><span class="kv-k">Client</span><span class="kv-v" id="prClient">—</span></div>
+      <div class="kv mb8"><span class="kv-k">Batch</span><span class="kv-v" id="prBatch">—</span></div>
+      <div class="kv mb8"><span class="kv-k">Files</span><span class="kv-v" id="prFiles">—</span></div>
+      <div class="kv mb12"><span class="kv-k">Purge Date</span><span class="kv-v" id="prPurgeDate">—</span></div>
+      <div class="fg mb12"><label>Export Format</label>
+        <div class="flex gap12">
+          <label class="flex aic gap8"><input type="checkbox" checked id="prPdf"> 📄 PDF (Formal Letter)</label>
+          <label class="flex aic gap8"><input type="checkbox" checked id="prXl"> 📊 Excel</label>
+        </div>
+      </div>
+      <div class="fg mb12"><label>Additional Notes for Client</label>
+        <textarea class="inp" rows="3" placeholder="Any notes to include in the report..."></textarea></div>
+    </div>
+    <div class="md-ft">
+      <button class="btn btn-grey" onclick="cm('m-purge-report')">Cancel</button>
+      <button class="btn btn-comp" id="prApproveBtn" onclick="doPurgeExport()">Approve & Export</button>
+    </div>
+  </div>
+</div>
+
+<!-- AUDIT SESSION MODAL -->
+<div class="mo" id="m-audit-session">
+  <div class="md md-md">
+    <div class="md-hd"><span>🔐</span><h3>Create Audit Session</h3><button class="md-close" onclick="cm('m-audit-session')">✕</button></div>
+    <div class="md-body">
+      <div class="fg mb12"><label>Staff Member *</label>
+        <select class="inp"><option>-- Select Staff --</option><option>Nurul Compliance</option><option>Razif Compliance</option><option>Hafiz Compliance</option></select></div>
+      <div class="grid2 mb12">
+        <div class="fg"><label>Audit Username *</label><input class="inp" type="text" placeholder="e.g. audit.maybank.mar26"></div>
+        <div class="fg"><label>Assign Client(s) *</label>
+          <select class="inp"><option>CIMB Bank</option><option>Maybank</option><option>RHB Bank</option><option>Hong Leong</option></select></div>
+      </div>
+      <div class="grid2 mb12">
+        <div class="fg"><label>Audit Password *</label><input class="inp" type="password" placeholder="Set session password"></div>
+        <div class="fg"><label>Confirm Password *</label><input class="inp" type="password" placeholder="Confirm password"></div>
+      </div>
+      <div class="fg mb12"><label>Session Notes</label>
+        <textarea class="inp" rows="2" placeholder="e.g. Maybank Q1 2026 compliance review"></textarea></div>
+      <div class="info-banner">ℹ️ Staff will access via <strong>collectpro_compliance_audit.html</strong> with the credentials set above. They will see Call Review, Complaint Cases, Scoring Reports and Purge Oversight in read-only mode for the selected client only.</div>
+    </div>
+    <div class="md-ft">
+      <button class="btn btn-grey" onclick="cm('m-audit-session')">Cancel</button>
+      <button class="btn btn-comp" onclick="createAuditSession()">Create & Activate Session</button>
+    </div>
+  </div>
+</div>
+
+<!-- BULK EXPORT MODAL -->
+<div class="mo" id="m-bulk-export">
+  <div class="md md-sm">
+    <div class="md-hd"><span>⬇</span><h3>Export Scorecards</h3><button class="md-close" onclick="cm('m-bulk-export')">✕</button></div>
+    <div class="md-body">
+      <div class="fg mb12"><label>Format</label>
+        <div class="flex gap12">
+          <label class="flex aic gap8"><input type="radio" name="expFmt" checked> 📊 Excel (scorecard per call)</label>
+          <label class="flex aic gap8"><input type="radio" name="expFmt"> 📄 PDF (formatted per call)</label>
+          <label class="flex aic gap8"><input type="radio" name="expFmt"> 📄 PDF (bulk summary)</label>
+        </div>
+      </div>
+      <div class="fg mb12"><label>Include</label>
+        <div class="flex gap12">
+          <label class="flex aic gap8"><input type="checkbox" checked> Call details</label>
+          <label class="flex aic gap8"><input type="checkbox" checked> Step scores</label>
+          <label class="flex aic gap8"><input type="checkbox" checked> Overall remarks</label>
+        </div>
+      </div>
+    </div>
+    <div class="md-ft">
+      <button class="btn btn-grey" onclick="cm('m-bulk-export')">Cancel</button>
+      <button class="btn btn-comp" onclick="doBulkExport()">⬇ Export</button>
+    </div>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div id="toast" style="position:fixed;bottom:24px;right:24px;background:#0F766E;color:#fff;padding:12px 20px;border-radius:8px;font-size:13px;font-weight:600;display:none;z-index:9999;box-shadow:0 4px 20px rgba(0,0,0,.2);max-width:340px"></div>
+
+<script>
+// =========== DATA ===========
+var currentRole = 'mgr'; // mgr | exe
+
+var REVIEW_DATA = [
+  {id:1,date:'24 Mar 2026',time:'10:14 AM',collector:'Nurul Ain',debtor:'Ahmad Hassan',acct:'ACC-2024-001',client:'CIMB Bank',product:'Personal Loan',dur:'04:32',callSt:'Connected',revSt:'unreviewed',score:null},
+  {id:2,date:'24 Mar 2026',time:'11:30 AM',collector:'Mohd Hafiz',debtor:'Siti Rahayu',acct:'ACC-2024-003',client:'Maybank',product:'Credit Card',dur:'02:15',callSt:'Connected',revSt:'scored',score:87},
+  {id:3,date:'23 Mar 2026',time:'02:45 PM',collector:'Farah Liyana',debtor:'Rajan Kumar',acct:'ACC-2024-007',client:'RHB Bank',product:'Personal Loan',dur:'03:50',callSt:'Connected',revSt:'inprog',score:null},
+  {id:4,date:'23 Mar 2026',time:'09:00 AM',collector:'Nurul Ain',debtor:'Lee Mei Ling',acct:'ACC-2024-012',client:'CIMB Bank',product:'Credit Card',dur:'01:20',callSt:'RNA',revSt:'unreviewed',score:null},
+  {id:5,date:'22 Mar 2026',time:'03:30 PM',collector:'Zulkifli Hassan',debtor:'Muthu Krishnan',acct:'ACC-2024-015',client:'Maybank',product:'Housing Loan',dur:'05:10',callSt:'Connected',revSt:'flagged',score:42},
+  {id:6,date:'22 Mar 2026',time:'10:00 AM',collector:'Mohd Hafiz',debtor:'Ahmad Hassan',acct:'ACC-2024-001',client:'CIMB Bank',product:'Personal Loan',dur:'03:22',callSt:'Connected',revSt:'scored',score:91},
+];
+
+var FREQ_DATA = [
+  {id:1,debtor:'Ahmad Hassan',acct:'ACC-2024-001',client:'CIMB Bank',collector:'Nurul Ain',count:5,dates:['18 Mar','19 Mar','21 Mar','22 Mar','24 Mar'],codes:['RNA','RNA','PTP','CBS','PTP'],flagSt:'flagged'},
+  {id:2,debtor:'Muthu Krishnan',acct:'ACC-2024-015',client:'Maybank',collector:'Zulkifli Hassan',count:4,dates:['20 Mar','21 Mar','22 Mar','23 Mar'],codes:['RNA','RNA','CBS','PTP'],flagSt:'flagged'},
+  {id:3,debtor:'Lee Mei Ling',acct:'ACC-2024-012',client:'CIMB Bank',collector:'Nurul Ain',count:4,dates:['19 Mar','20 Mar','22 Mar','24 Mar'],codes:['RNA','BU','RNA','RNA'],flagSt:'pending'},
+  {id:4,debtor:'Rajan Kumar',acct:'ACC-2024-007',client:'RHB Bank',collector:'Farah Liyana',count:4,dates:['18 Mar','20 Mar','22 Mar','23 Mar'],codes:['CBS','PTP','PTP','CBS'],flagSt:'accepted'},
+  {id:5,debtor:'Siti Rahayu',acct:'ACC-2024-003',client:'Maybank',collector:'Mohd Hafiz',count:3,dates:['20 Mar','22 Mar','24 Mar'],codes:['RNA','CBS','PTP'],flagSt:'accepted'},
+];
+
+var COMPLAINT_DATA = [
+  {id:1,client:'Maybank',acct:'ACC-2024-003',debtor:'Siti Rahayu',recDate:'20 Mar 2026',via:'Email',summary:'Collector called more than 3x per week, inappropriate language',severity:'high',lockSt:'hard',assigned:'Aisha Compliance'},
+  {id:2,client:'CIMB Bank',acct:'ACC-2024-001',debtor:'Ahmad Hassan',recDate:'22 Mar 2026',via:'Phone Call',summary:'Customer claims collector threatened legal action without authorisation',severity:'medium',lockSt:'soft',assigned:'Razif Compliance'},
+  {id:3,client:'RHB Bank',acct:'ACC-2024-007',debtor:'Rajan Kumar',recDate:'24 Mar 2026',via:'Email',summary:'Customer did not receive proper disclosure of amount owed',severity:'low',lockSt:'soft',assigned:'Nurul Compliance'},
+];
+
+var PURGE_DATA = [
+  {client:'CIMB Bank',batch:'BATCH-2024-09',abortDate:'20 Jan 2026',purgeDate:'20 Apr 2026',files:142,graceDays:90,daysLeft:23},
+  {client:'Maybank',batch:'BATCH-2024-07',abortDate:'5 Jan 2026',purgeDate:'5 Apr 2026',files:87,graceDays:90,daysLeft:8},
+  {client:'RHB Bank',batch:'BATCH-2024-11',abortDate:'1 Feb 2026',purgeDate:'2 May 2026',files:234,graceDays:90,daysLeft:35},
+  {client:'Hong Leong',batch:'BATCH-2024-06',abortDate:'15 Dec 2025',purgeDate:'15 Mar 2026',files:56,graceDays:90,daysLeft:0},
+];
+
+var AUDIT_SESSIONS = [
+  {id:1,staff:'Nurul Compliance',username:'audit.maybank.mar26',clients:'Maybank',created:'15 Mar 2026',notes:'Maybank Q1 2026 compliance review',status:'active'},
+  {id:2,staff:'Razif Compliance',username:'audit.cimb.feb26',clients:'CIMB Bank',created:'1 Feb 2026',notes:'CIMB surprise audit session',status:'inactive'},
+];
+
+var LOG_DATA = [
+  {time:'28 Mar 2026 09:45',user:'Aisha Compliance',role:'mgr',type:'review',detail:'Submitted score 87% for ACC-2024-003',client:'Maybank',acct:'ACC-2024-003'},
+  {time:'27 Mar 2026 14:30',user:'Razif Compliance',role:'exe',type:'complaint',detail:'Hard lock applied to ACC-2024-003',client:'Maybank',acct:'ACC-2024-003'},
+  {time:'27 Mar 2026 11:00',user:'Nurul Compliance',role:'exe',type:'freq',detail:'Marked frequency violation — ACC-2024-015',client:'Maybank',acct:'ACC-2024-015'},
+  {time:'26 Mar 2026 16:20',user:'Aisha Compliance',role:'mgr',type:'export',detail:'Exported PDF purge report — Maybank BATCH-2024-07',client:'Maybank',acct:'—'},
+  {time:'25 Mar 2026 10:00',user:'Aisha Compliance',role:'mgr',type:'audit',detail:'Created audit session: audit.maybank.mar26',client:'Maybank',acct:'—'},
+];
+
+var SCRIPT_STEPS = [
+  {section:'Opening',steps:[
+    {id:1,desc:'Greeted customer with appropriate salutation (Good morning/afternoon/evening)'},
+    {id:2,desc:'Introduced self by full name'},
+    {id:3,desc:'Stated calling on behalf of client (bank name mentioned correctly)'},
+    {id:4,desc:'Stated purpose of call clearly'},
+  ]},
+  {section:'Verification',steps:[
+    {id:5,desc:'Verified customer IC number / identification'},
+    {id:6,desc:'Confirmed customer name matches account'},
+  ]},
+  {section:'Negotiation',steps:[
+    {id:7,desc:'Presented outstanding balance accurately'},
+    {id:8,desc:'Followed negotiation script guidelines'},
+  ]},
+  {section:'Closing',steps:[
+    {id:9,desc:'Summarised agreed action (PTP/callback/etc.)'},
+    {id:10,desc:'Provided correct next steps and contact information'},
+  ]},
+];
+
+var crScores = {}; // {stepId: 'pass'|'fail'|'na'}
+var crPlaying = false;
+var crProgress = 0;
+var crTimer = null;
+
+// =========== ROUTING ===========
+var ROUTES = {
+  'dashboard':'s-dashboard','call-review':'s-call-review','call-frequency':'s-call-frequency',
+  'complaints':'s-complaints','scoring-reports':'s-scoring-reports','purge-report':'s-purge-report',
+  'audit-control':'s-audit-control','activity-log':'s-activity-log'
+};
+
+function nav(r) {
+  var sid = ROUTES[r];
+  if (!sid) return;
+  document.querySelectorAll('.screen').forEach(function(s){s.classList.remove('active')});
+  var el = document.getElementById(sid);
+  if (el) el.classList.add('active');
+  document.querySelectorAll('.sb-item').forEach(function(i){i.classList.remove('on')});
+  document.querySelectorAll('.sb-item').forEach(function(i){
+    if (i.getAttribute('onclick') && i.getAttribute('onclick').indexOf("'"+r+"'") > -1) i.classList.add('on');
+  });
+  if (r === 'call-review') renderReviewTable();
+  if (r === 'call-frequency') renderFreqTable();
+  if (r === 'complaints') renderComplaintTable();
+  if (r === 'purge-report') renderPurgeCards();
+  if (r === 'audit-control') renderAuditTable();
+  if (r === 'activity-log') renderLog();
+  if (r === 'dashboard') renderDash();
+}
+
+// =========== LOGIN ===========
+function selRole(btn, role) {
+  document.querySelectorAll('.role-tab').forEach(function(b){b.classList.remove('on')});
+  btn.classList.add('on');
+  currentRole = role;
+  var lbl = document.getElementById('roleLabel');
+  var sbRole = document.getElementById('sbRole');
+  var tbBadge = document.getElementById('tbRoleBadge');
+  if (role === 'mgr') {
+    if(lbl) lbl.textContent = '🛡 Role: Compliance Manager';
+    if(sbRole){sbRole.textContent='COMP. MANAGER';sbRole.className='sb-urole mgr';}
+    if(tbBadge) tbBadge.textContent='COMPLIANCE MANAGER';
+    showMgrItems(true);
+  } else {
+    if(lbl) lbl.textContent = '⚡ Role: Compliance Executive';
+    if(sbRole){sbRole.textContent='COMP. EXECUTIVE';sbRole.className='sb-urole exe';}
+    if(tbBadge) tbBadge.textContent='COMPLIANCE EXECUTIVE';
+    showMgrItems(false);
+  }
+}
+
+function showMgrItems(show) {
+  var items = ['auditNavItem','mgmtGrp','purgeTile','purgeNavItem','auditSessionTile','purgeDashCard'];
+  items.forEach(function(id){
+    var el = document.getElementById(id);
+    if (el) el.style.display = show ? '' : 'none';
+  });
+  var exeBanner = document.getElementById('exeLogBanner');
+  if (exeBanner) exeBanner.classList.toggle('hidden', show);
+}
+
+function doLogin() {
+  document.getElementById('s-login').style.display = 'none';
+  document.getElementById('s-main').classList.add('active');
+  var d = new Date();
+  var tb = document.getElementById('tbDate');
+  if (tb) tb.textContent = d.toLocaleDateString('en-MY',{weekday:'short',day:'numeric',month:'short',year:'numeric'});
+  if (currentRole === 'exe') showMgrItems(false);
+  renderDash();
+  toast('Welcome back!','ok');
+}
+
+function doLogout() {
+  if (confirm('Sign out?')) {
+    document.getElementById('s-main').classList.remove('active');
+    document.getElementById('s-login').style.display = 'flex';
+  }
+}
+
+// =========== TOAST ===========
+function toast(msg, type) {
+  var t = document.getElementById('toast');
+  t.textContent = msg;
+  t.style.background = type==='er'?'#EF4444':type==='in'?'#0284C7':'#0F766E';
+  t.style.display = 'block';
+  setTimeout(function(){t.style.display='none';}, 2800);
+}
+
+// =========== MODAL ===========
+function om(id){var e=document.getElementById(id);if(e)e.classList.add('op');}
+function cm(id){var e=document.getElementById(id);if(e)e.classList.remove('op');}
+
+// =========== DASHBOARD ===========
+function renderDash() {
+  // Freq list
+  var fl = document.getElementById('dashFreqList');
+  if (fl) {
+    fl.innerHTML = FREQ_DATA.slice(0,3).map(function(f){
+      return '<div class="ae"><div class="ae-dot" style="background:'+
+        (f.flagSt==='flagged'?'var(--red)':'var(--orange)')+'"></div>'+
+        '<div><div class="ae-title">'+f.debtor+' — '+f.count+' calls</div>'+
+        '<div class="ae-meta">'+f.collector+' · '+f.client+'</div></div></div>';
+    }).join('');
+  }
+  // Complaint list
+  var cl = document.getElementById('dashComplaintList');
+  if (cl) {
+    cl.innerHTML = COMPLAINT_DATA.slice(0,3).map(function(c){
+      return '<div class="ae"><div class="ae-dot" style="background:'+
+        (c.lockSt==='hard'?'var(--red)':'var(--orange)')+'"></div>'+
+        '<div><div class="ae-title">'+c.debtor+' — '+c.client+'</div>'+
+        '<div class="ae-meta">'+c.recDate+' · '+c.via+'</div></div></div>';
+    }).join('');
+  }
+  // Purge list
+  var pl = document.getElementById('dashPurgeList');
+  if (pl) {
+    pl.innerHTML = PURGE_DATA.filter(function(p){return p.daysLeft<=30}).slice(0,3).map(function(p){
+      var c = p.daysLeft<=7?'var(--red)':p.daysLeft<=30?'var(--orange)':'var(--green)';
+      return '<div class="ae"><div class="ae-dot" style="background:'+c+'"></div>'+
+        '<div><div class="ae-title">'+p.client+' — '+p.batch+'</div>'+
+        '<div class="ae-meta">'+p.daysLeft+' days left · '+p.files+' files</div></div></div>';
+    }).join('');
+  }
+}
+
+// =========== CALL REVIEW ===========
+function renderReviewTable() {
+  var tbody = document.getElementById('reviewTbody');
+  if (!tbody) return;
+  var sPill = currentRevPill || 'all';
+  var rows = REVIEW_DATA.filter(function(r){
+    if (sPill==='all') return true;
+    return r.revSt === sPill;
+  });
+  tbody.innerHTML = rows.map(function(r){
+    var sc = r.score !== null ? scoreBadge(r.score) : '<span class="tx3c">—</span>';
+    var st = revStatusPill(r.revSt);
+    return '<tr>'+
+      '<td><input type="checkbox"></td>'+
+      '<td class="mono" style="font-size:12px">'+r.date+'<br><span class="tx3c">'+r.time+'</span></td>'+
+      '<td>'+r.collector+'</td>'+
+      '<td style="font-weight:600;color:var(--brand2)">'+r.debtor+'</td>'+
+      '<td class="mono" style="font-size:12px">'+r.acct+'</td>'+
+      '<td>'+r.client+'</td>'+
+      '<td><span class="tag tag-comp">'+r.product+'</span></td>'+
+      '<td class="mono">'+r.dur+'</td>'+
+      '<td><span class="spill '+(r.callSt==='Connected'?'s-ptp2':'s-rna')+'">'+r.callSt+'</span></td>'+
+      '<td>'+st+'</td>'+
+      '<td>'+sc+'</td>'+
+      '<td><button class="btn btn-comp btn-sm" onclick="openReview('+r.id+')">▶ Review</button></td>'+
+    '</tr>';
+  }).join('');
+}
+
+var currentRevPill = 'all';
+function setRevPill(el, val) {
+  document.querySelectorAll('#reviewPills .pill').forEach(function(p){p.classList.remove('on')});
+  el.classList.add('on');
+  currentRevPill = val;
+  renderReviewTable();
+}
+
+function revStatusPill(st) {
+  var map = {unreviewed:'s-unrev',inprog:'s-inprog',scored:'s-scored',flagged:'s-flagged'};
+  var lbl = {unreviewed:'Unreviewed',inprog:'In Progress',scored:'Scored',flagged:'Flagged'};
+  return '<span class="spill '+(map[st]||'s-unrev')+'">'+(lbl[st]||st)+'</span>';
+}
+
+function scoreBadge(score) {
+  var cls = score >= 75 ? 'score-high' : score >= 50 ? 'score-mid' : 'score-low';
+  return '<span class="score-badge '+cls+'">'+score+'%</span>';
+}
+
+function openReview(id) {
+  var r = REVIEW_DATA.find(function(x){return x.id===id});
+  if (!r) { om('m-call-review'); return; }
+  var el = function(i){return document.getElementById(i)};
+  if(el('crDebtorName')) el('crDebtorName').textContent = r.debtor;
+  if(el('crDebtor')) el('crDebtor').textContent = r.debtor;
+  if(el('crAcct')) el('crAcct').textContent = r.acct;
+  if(el('crClient')) el('crClient').textContent = r.client;
+  if(el('crProduct')) el('crProduct').textContent = r.product;
+  if(el('crCollector')) el('crCollector').textContent = r.collector;
+  if(el('crAudioName')) el('crAudioName').textContent = 'Call — '+r.date+', '+r.time;
+  if(el('crDuration')) el('crDuration').textContent = r.dur;
+  crScores = {};
+  buildChecklist();
+  updateScore();
+  om('m-call-review');
+}
+
+function crChkAll(cb) {}
+
+function buildChecklist() {
+  var c = document.getElementById('crChecklist');
+  if (!c) return;
+  var html = '';
+  SCRIPT_STEPS.forEach(function(sec){
+    html += '<div class="chk-section-hd">'+sec.section+'</div>';
+    sec.steps.forEach(function(step){
+      var q = '"';
+      html += '<div class="chk-step" id="cs'+step.id+'">'+
+        '<div class="chk-step-top">'+
+          '<div class="chk-num">'+step.id+'</div>'+
+          '<div class="chk-desc">'+step.desc+'</div>'+
+          '<div class="chk-btns">'+
+            '<button class="chk-btn pass-btn" onclick='+q+'crMark('+step.id+',"pass",this)'+q+'>✓ Pass</button>'+
+            '<button class="chk-btn fail-btn" onclick='+q+'crMark('+step.id+',"fail",this)'+q+'>✗ Fail</button>'+
+            '<button class="chk-btn na-btn" onclick='+q+'crMark('+step.id+',"na",this)'+q+'>N/A</button>'+
+          '</div>'+
+        '</div>'+
+        '<div class="chk-remark" id="cr-rem-'+step.id+'">'+
+          '<input class="inp" type="text" placeholder="Optional notes for this step..." style="font-size:12px;margin-top:6px">'+
+        '</div>'+
+      '</div>';
+    });
+  });
+  c.innerHTML = html;
+}
+
+function crMark(stepId, decision, btn) {
+  crScores[stepId] = decision;
+  var row = document.getElementById('cs'+stepId);
+  if (row) {
+    row.className = 'chk-step ' + (decision==='na'?'na':decision);
+    row.querySelectorAll('.chk-btn').forEach(function(b){
+      b.classList.remove('on');
+    });
+    btn.classList.add('on');
+    var rem = document.getElementById('cr-rem-'+stepId);
+    if (rem) rem.className = 'chk-remark'+(decision!=='na'?' show':'');
+  }
+  updateScore();
+}
+
+function updateScore() {
+  var pass=0, fail=0, na=0;
+  var totalSteps = 0;
+  SCRIPT_STEPS.forEach(function(sec){sec.steps.forEach(function(s){totalSteps++;});});
+  Object.keys(crScores).forEach(function(id){
+    var v = crScores[id];
+    if(v==='pass') pass++;
+    else if(v==='fail') fail++;
+    else if(v==='na') na++;
+  });
+  var scoreable = pass + fail;
+  var pct = scoreable > 0 ? Math.round((pass/scoreable)*100) : 0;
+  var el=function(i){return document.getElementById(i)};
+  if(el('crPass')) el('crPass').textContent = pass;
+  if(el('crFail')) el('crFail').textContent = fail;
+  if(el('crNa')) el('crNa').textContent = na;
+  if(el('crTotal')) el('crTotal').textContent = totalSteps;
+  if(el('crScorePct')) el('crScorePct').textContent = scoreable > 0 ? pct+'%' : '—';
+}
+
+function crTogglePlay() {
+  crPlaying = !crPlaying;
+  var btn = document.getElementById('crPlayBtn');
+  if (btn) btn.textContent = crPlaying ? '⏸' : '▶';
+  if (crPlaying) {
+    crTimer = setInterval(function(){
+      crProgress = Math.min(crProgress + 0.4, 100);
+      var fill = document.getElementById('crApFill');
+      if(fill) fill.style.width = crProgress+'%';
+      var cur = document.getElementById('crCurTime');
+      var secs = Math.round(crProgress * 2.72);
+      if(cur) cur.textContent = String(Math.floor(secs/60)).padStart(2,'0')+':'+String(secs%60).padStart(2,'0');
+      if(crProgress>=100){clearInterval(crTimer);crPlaying=false;if(btn)btn.textContent='▶';}
+    }, 200);
+  } else {
+    clearInterval(crTimer);
+  }
+}
+
+function crSeek(e, bar) {
+  var rect = bar.getBoundingClientRect();
+  crProgress = ((e.clientX - rect.left) / rect.width) * 100;
+  var fill = document.getElementById('crApFill');
+  if(fill) fill.style.width = crProgress+'%';
+}
+
+function crSeekRel(sec) {
+  crProgress = Math.max(0, Math.min(100, crProgress + (sec/272)*100));
+  var fill = document.getElementById('crApFill');
+  if(fill) fill.style.width = crProgress+'%';
+}
+
+function crSaveDraft() {
+  toast('Draft saved','ok');
+}
+
+function crSubmit() {
+  var pass=0,fail=0,na=0;
+  Object.keys(crScores).forEach(function(id){
+    var v=crScores[id];
+    if(v==='pass')pass++;else if(v==='fail')fail++;else if(v==='na')na++;
+  });
+  var scoreable=pass+fail;
+  var pct=scoreable>0?Math.round((pass/scoreable)*100):0;
+  cm('m-call-review');
+  toast('Score submitted — '+pct+'% compliance','ok');
+}
+
+// =========== FREQUENCY ===========
+var currentFreqPill = 'all';
+function setFreqPill(el, val) {
+  document.querySelectorAll('#s-call-frequency .pill').forEach(function(p){p.classList.remove('on')});
+  el.classList.add('on');
+  currentFreqPill = val;
+  renderFreqTable();
+}
+
+function renderFreqTable() {
+  var tbody = document.getElementById('freqTbody');
+  if (!tbody) return;
+  var rows = FREQ_DATA.filter(function(f){
+    if (currentFreqPill==='all') return true;
+    if (currentFreqPill==='flagged') return f.count > 3;
+    return f.flagSt === currentFreqPill;
+  });
+  tbody.innerHTML = rows.map(function(f){
+    var flagCls = {flagged:'s-flagged',pending:'s-inprog',accepted:'s-scored',violation:'s-hard'};
+    var flagLbl = {flagged:'🔴 Flagged',pending:'🟡 Under Review',accepted:'✅ Accepted',violation:'⛔ Violation'};
+    var countCls = f.count > 3 ? 'style="color:var(--red);font-weight:700;font-family:\'DM Mono\',monospace"' : '';
+    var q = '"';
+    return '<tr class="'+(f.count>3?'comp-row':'')+'">'+
+      '<td style="font-weight:600;color:var(--brand2)">'+f.debtor+'</td>'+
+      '<td class="mono" style="font-size:12px">'+f.acct+'</td>'+
+      '<td>'+f.client+'</td>'+
+      '<td>'+f.collector+'</td>'+
+      '<td '+countCls+'>'+f.count+' calls</td>'+
+      '<td><div class="freq-row">'+f.dates.map(function(d,i){
+        return '<span class="tag '+(f.count>3&&i>=3?'tag-red':'tag-grey')+'" style="font-size:10px">'+d+'</span>';
+      }).join('')+'</div></td>'+
+      '<td><div class="freq-row">'+f.codes.map(function(c){
+        return '<span class="spill s-rna" style="font-size:10px;padding:2px 6px">'+c+'</span>';
+      }).join('')+'</div></td>'+
+      '<td><span class="spill '+(flagCls[f.flagSt]||'s-unrev')+'">'+
+        (flagLbl[f.flagSt]||f.flagSt)+'</span></td>'+
+      '<td><button class="btn btn-out btn-sm" onclick='+q+'openFreqReview('+f.id+')'+q+'>Review</button></td>'+
+    '</tr>';
+  }).join('');
+}
+
+function openFreqReview(id) {
+  var f = FREQ_DATA.find(function(x){return x.id===id});
+  if (!f) { om('m-freq-review'); return; }
+  var el = function(i){return document.getElementById(i)};
+  if(el('frDebtorName')) el('frDebtorName').textContent = f.debtor;
+  if(el('frCallCount')) el('frCallCount').textContent = f.count+' times';
+  var tl = document.getElementById('frTimeline');
+  if (tl) {
+    tl.innerHTML = f.dates.map(function(d,i){
+      var q = '"';
+      return '<div class="act-entry">'+
+        '<div class="act-icon" style="background:'+(i>=3?'#FEE2E2':'#F0FDF9')+'">'+
+          (i>=3?'⚠️':'📞')+
+        '</div>'+
+        '<div><div class="ae-title">Call '+(i+1)+' — '+d+
+          (i>=3?' <span class="tag tag-red" style="margin-left:8px">Exceeds limit</span>':'')+
+        '</div>'+
+        '<div class="ae-meta">Status: '+f.codes[i]+' · '+f.collector+'</div></div>'+
+      '</div>';
+    }).join('');
+  }
+  om('m-freq-review');
+}
+
+function frDecide(decision) {
+  cm('m-freq-review');
+  toast(decision==='accepted' ? '✓ Marked as justified' : '⛔ Violation recorded','ok');
+}
+
+// =========== COMPLAINTS ===========
+var currentCompPill = 'all';
+function setCompPill(el, val) {
+  document.querySelectorAll('#s-complaints .pill').forEach(function(p){p.classList.remove('on')});
+  el.classList.add('on');
+  currentCompPill = val;
+  renderComplaintTable();
+}
+
+function renderComplaintTable() {
+  var tbody = document.getElementById('complaintTbody');
+  if (!tbody) return;
+  var rows = COMPLAINT_DATA.filter(function(c){
+    if (currentCompPill==='all') return true;
+    if (currentCompPill==='soft') return c.lockSt==='soft';
+    if (currentCompPill==='hard') return c.lockSt==='hard';
+    return true;
+  });
+  tbody.innerHTML = rows.map(function(c){
+    var q = '"';
+    var sevCls = {high:'tag-red',medium:'tag-orange',low:'tag-comp'};
+    var lockPill = c.lockSt==='hard' ? '<span class="spill s-hard">🔒 Hard Locked</span>' :
+      c.lockSt==='soft' ? '<span class="spill s-soft">🟡 Soft Locked</span>' :
+      '<span class="spill s-unrev">Unlocked</span>';
+    return '<tr class="'+(c.lockSt==='hard'?'comp-hard-row':c.lockSt==='soft'?'comp-row':'')+'">'+
+      '<td>'+c.client+'</td>'+
+      '<td class="mono" style="font-size:12px">'+c.acct+'</td>'+
+      '<td style="font-weight:600">'+c.debtor+'</td>'+
+      '<td>'+c.recDate+'</td>'+
+      '<td><span class="tag tag-grey">'+c.via+'</span></td>'+
+      '<td style="max-width:200px;font-size:12px;color:var(--tx2)">'+c.summary+'</td>'+
+      '<td><span class="tag '+(sevCls[c.severity]||'tag-grey')+'">'+c.severity.toUpperCase()+'</span></td>'+
+      '<td>'+lockPill+'</td>'+
+      '<td class="f12">'+c.assigned+'</td>'+
+      '<td>'+
+        '<button class="btn btn-out btn-sm" onclick='+q+'openComplaintDetail('+c.id+')'+q+'>View</button> '+
+        (c.lockSt!=='hard'?'<button class="btn btn-red btn-sm" onclick='+q+'applyLock('+c.id+',"hard")'+q+'>🔒 Lock</button>':'')+ 
+      '</td>'+
+    '</tr>';
+  }).join('');
+}
+
+function saveComplaint() {
+  cm('m-complaint-intake');
+  toast('Complaint case created — COMP status applied','ok');
+}
+
+function openComplaintDetail(id) {
+  om('m-complaint-detail');
+}
+
+function applyLock(id, type) {
+  var c = COMPLAINT_DATA.find(function(x){return x.id===id});
+  if (!c) return;
+  var el = function(i){return document.getElementById(i)};
+  if(el('lcAcct')) el('lcAcct').textContent = c.acct;
+  if(el('lcDebtor')) el('lcDebtor').textContent = c.debtor;
+  if(el('lcType')) el('lcType').textContent = type==='hard'?'Hard Lock — File hidden from all operations':'Soft Lock — File visible, cannot be opened';
+  if(el('lcIcon')) el('lcIcon').textContent = type==='hard'?'🔴':'🟡';
+  if(el('lcTitle')) el('lcTitle').textContent = type==='hard'?'Apply Hard Lock':'Apply Soft Lock';
+  var msg = document.getElementById('lcMsg');
+  if(msg) msg.textContent = type==='hard' ?
+    '⚠️ This file will be completely hidden from all collection operations. Only Compliance can see and release it.' :
+    '🟡 File will show COMP status. Visible but locked — collectors cannot open it.';
+  om('m-lock-confirm');
+}
+
+function doLock() {
+  cm('m-lock-confirm');
+  toast('🔒 Lock applied — COMP status updated','ok');
+}
+
+function cdUnlock() {
+  if (currentRole !== 'mgr') { toast('Manager access required to release hard lock','er'); return; }
+  cm('m-complaint-detail');
+  toast('🔓 Lock released — file returned to collection','ok');
+}
+
+function cdAddAction() {
+  var notes = document.getElementById('cdActionNotes');
+  if (!notes || !notes.value.trim()) { toast('Please add investigation notes','er'); return; }
+  cm('m-complaint-detail');
+  toast('Action logged and case updated','ok');
+}
+
+function cdEscalate() {
+  cm('m-complaint-detail');
+  om('m-escalate');
+}
+
+function doEscalate() {
+  cm('m-escalate');
+  toast('Escalation submitted for manager approval','ok');
+}
+
+// =========== PURGE ===========
+function renderPurgeCards() {
+  var c = document.getElementById('purgeCards');
+  if (!c) return;
+  c.innerHTML = PURGE_DATA.map(function(p){
+    var urgent = p.daysLeft <= 7;
+    var warn = p.daysLeft <= 30 && !urgent;
+    var daysCls = p.daysLeft<=7?'r':p.daysLeft<=30?'o':'g';
+    var cardCls = urgent?'purge-card urgent':warn?'purge-card warn':'purge-card';
+    var btnHtml = currentRole==='mgr' ?
+      '<button class="btn btn-comp btn-sm mt8" onclick=\'openPurgeReport("'+p.client+'","'+p.batch+'",'+p.files+',"'+p.purgeDate+'")\'>📄 Generate Report</button>' : '';
+    return '<div class="'+cardCls+'">'+
+      '<div class="flex aic jcb mb8">'+
+        '<div><div style="font-weight:700;color:var(--tx)">'+p.client+'</div><div class="f12 tx3c">'+p.batch+'</div></div>'+
+        (urgent?'<span class="tag tag-red">⚠️ URGENT</span>':warn?'<span class="tag tag-orange">DUE SOON</span>':'')+'</div>'+
+      '<div class="purge-days '+daysCls+'">'+p.daysLeft+'d</div>'+
+      '<div class="f12 tx3c mb8">days until purge</div>'+
+      '<div class="kv"><span class="kv-k">Files</span><span class="kv-v">'+p.files+'</span></div>'+
+      '<div class="kv"><span class="kv-k">Purge Date</span><span class="kv-v">'+p.purgeDate+'</span></div>'+
+      '<div class="kv"><span class="kv-k">Grace Period</span><span class="kv-v">'+p.graceDays+' days</span></div>'+
+      btnHtml+
+    '</div>';
+  }).join('');
+}
+
+function openPurgeReport(client, batch, files, purgeDate) {
+  var el = function(i){return document.getElementById(i)};
+  if(el('prClient')) el('prClient').textContent = client;
+  if(el('prBatch')) el('prBatch').textContent = batch;
+  if(el('prFiles')) el('prFiles').textContent = files+' files';
+  if(el('prPurgeDate')) el('prPurgeDate').textContent = purgeDate;
+  om('m-purge-report');
+}
+
+function doPurgeExport() {
+  cm('m-purge-report');
+  toast('📄 Purge report exported and logged','ok');
+}
+
+// =========== SCORING REPORTS ===========
+function setSrTab(el, tab) {
+  document.querySelectorAll('#s-scoring-reports .pill').forEach(function(p){p.classList.remove('on')});
+  el.classList.add('on');
+}
+
+function genScoringReport() {
+  var res = document.getElementById('srResult');
+  if(res) res.classList.remove('hidden');
+  var kpi = document.getElementById('srKpi');
+  if(kpi) kpi.innerHTML = [
+    {l:'Calls Reviewed',v:'47',c:'#0284C7'},{l:'Avg Score',v:'82%',c:'#0F766E'},
+    {l:'Pass Rate',v:'74%',c:'#22C55E'},{l:'Violations',v:'2',c:'#EF4444'}
+  ].map(function(t){
+    return '<div class="tile" style="border-top-color:'+t.c+';cursor:default">'+
+      '<div class="tile-lbl">'+t.l+'</div><div class="tile-val">'+t.v+'</div></div>';
+  }).join('');
+  var head = document.getElementById('srHead');
+  if(head) head.innerHTML = '<tr><th>Collector</th><th>Client</th><th>Calls Reviewed</th><th>Avg Score</th><th>Pass Rate</th><th>Top Issue</th></tr>';
+  var body = document.getElementById('srBody');
+  if(body) body.innerHTML = [
+    {col:'Nurul Ain',cl:'CIMB Bank',rev:14,sc:88,pass:86,iss:'IC Verification'},
+    {col:'Mohd Hafiz',cl:'Maybank',rev:11,sc:72,pass:64,iss:'Call Greeting'},
+    {col:'Farah Liyana',cl:'RHB Bank',rev:12,sc:91,pass:92,iss:'None'},
+    {col:'Zulkifli Hassan',cl:'Maybank',rev:10,sc:65,pass:60,iss:'Client Mention'},
+  ].map(function(r){
+    return '<tr><td>'+r.col+'</td><td>'+r.cl+'</td>'+
+      '<td class="mono">'+r.rev+'</td>'+
+      '<td>'+scoreBadge(r.sc)+'</td>'+
+      '<td class="mono">'+r.pass+'%</td>'+
+      '<td class="f12 tx2c">'+r.iss+'</td></tr>';
+  }).join('');
+  toast('Report generated','ok');
+}
+
+function exportReport(fmt) {
+  toast('⬇ Exporting as '+fmt.toUpperCase()+'...','ok');
+}
+
+// =========== AUDIT CONTROL ===========
+function renderAuditTable() {
+  var tbody = document.getElementById('auditTbody');
+  if (!tbody) return;
+  tbody.innerHTML = AUDIT_SESSIONS.map(function(s){
+    var q = '"';
+    var active = s.status==='active';
+    return '<tr>'+
+      '<td style="font-weight:600">'+s.staff+'</td>'+
+      '<td class="mono" style="font-size:12px">'+s.username+'</td>'+
+      '<td><span class="tag tag-comp">'+s.clients+'</span></td>'+
+      '<td class="f12 tx3c">'+s.created+'</td>'+
+      '<td class="f12 tx2c">'+s.notes+'</td>'+
+      '<td><span class="'+(active?'flex aic gap4':'')+'">'+
+        (active?'<span class="sess-active-dot"></span>':'')+''+
+        '<span class="spill '+(active?'s-scored':'s-rna')+'">'+(active?'Active':'Inactive')+'</span></span></td>'+
+      '<td>'+
+        (active?
+          '<button class="btn btn-red btn-sm" onclick='+q+'deactivateSession('+s.id+')'+q+'>Deactivate</button>':
+          '<button class="btn btn-comp btn-sm" onclick='+q+'reactivateSession('+s.id+')'+q+'>Reactivate</button>')+
+      '</td>'+
+    '</tr>';
+  }).join('');
+}
+
+function createAuditSession() {
+  cm('m-audit-session');
+  toast('🔐 Audit session created and activated','ok');
+}
+
+function deactivateSession(id) {
+  if(confirm('Deactivate this audit session? Credentials will be invalidated immediately.')) {
+    var s = AUDIT_SESSIONS.find(function(x){return x.id===id});
+    if(s) s.status='inactive';
+    renderAuditTable();
+    toast('Session deactivated','ok');
+  }
+}
+
+function reactivateSession(id) {
+  var s = AUDIT_SESSIONS.find(function(x){return x.id===id});
+  if(s) s.status='active';
+  renderAuditTable();
+  toast('Session reactivated','ok');
+}
+
+// =========== ACTIVITY LOG ===========
+var currentLogTab = 'all';
+function setLogTab(el, tab) {
+  document.querySelectorAll('#s-activity-log .pill').forEach(function(p){p.classList.remove('on')});
+  el.classList.add('on');
+  currentLogTab = tab;
+  renderLog();
+}
+
+function renderLog() {
+  var tbody = document.getElementById('logTbody');
+  if (!tbody) return;
+  var roleMap = {mgr:'COMP. MANAGER',exe:'COMP. EXECUTIVE'};
+  var roleCls = {mgr:'tag-comp',exe:'tag-grey'};
+  var typeCls = {review:'tag-comp',complaint:'tag-red',freq:'tag-orange',export:'tag-grey',audit:'s-cbs'};
+  var typeIc = {review:'🎧',complaint:'⚠️',freq:'📊',export:'⬇',audit:'🔐'};
+  var rows = LOG_DATA.filter(function(l){
+    if (currentLogTab==='all') return true;
+    return l.type === currentLogTab;
+  });
+  if (currentRole==='exe') rows = rows.filter(function(l){return l.role==='exe'});
+  tbody.innerHTML = rows.map(function(l){
+    return '<tr>'+
+      '<td class="mono f12">'+l.time+'</td>'+
+      '<td style="font-weight:600">'+l.user+'</td>'+
+      '<td><span class="tag '+(roleCls[l.role]||'tag-grey')+'">'+roleMap[l.role]+'</span></td>'+
+      '<td><span class="tag '+(typeCls[l.type]||'tag-grey')+'">'+typeIc[l.type]+' '+l.type+'</span></td>'+
+      '<td class="f12 tx2c">'+l.detail+'</td>'+
+      '<td class="f12">'+l.client+'</td>'+
+      '<td class="mono f12">'+l.acct+'</td>'+
+    '</tr>';
+  }).join('');
+}
+
+// =========== BULK EXPORT ===========
+function doBulkExport() {
+  cm('m-bulk-export');
+  toast('⬇ Exporting scorecards...','ok');
+}
+
+// =========== INIT ===========
+window.addEventListener('load', function(){
+  // Set today's date
+  var d = new Date();
+  var tb = document.getElementById('tbDate');
+  if(tb) tb.textContent = d.toLocaleDateString('en-MY',{weekday:'short',day:'numeric',month:'short',year:'numeric'});
+});
+</script>
+</body>
+</html>
